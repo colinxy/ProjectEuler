@@ -10,7 +10,8 @@ def fib(mod=10**9):
 
 
 def fib_approx(k, phi=Decimal(str(sqrt(5)/2+1/2)), 
-               psi=Decimal(str(1/2-sqrt(5)/2)), diff=Decimal(str(sqrt(5)))):
+                  psi=Decimal(str(1/2-sqrt(5)/2)), 
+                  diff=Decimal(str(sqrt(5)))):
     return (phi ** k - psi ** k) / diff
 
 
@@ -30,7 +31,7 @@ def main():
         if is_pan(f_k_str[-9:]):  # and is_pan(f_k_str[:9]):
             # print(k, f_k, end=' ')
             actual_f_k = str(fib_approx(k))
-            first9 = actual_f_k[0] + actual_f_k[2:10]
+            first9 = actual_f_k[0] + actual_f_k[2:10]  # omit the decimal point
             # print(first9)
             if is_pan(first9):
                 print(k, f_k, actual_f_k)

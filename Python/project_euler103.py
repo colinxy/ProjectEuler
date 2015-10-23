@@ -1,9 +1,8 @@
-
 from project_euler105 import is_special
 
 
 def main():
-    optimum = sum([20, 31, 38, 39, 40, 42, 45])
+    optimum = 100000  # INF
     set_str = [20, 31, 38, 39, 40, 42, 45]
 
     for i in range(19, 23):
@@ -18,8 +17,7 @@ def main():
                                     if sum(the_set) < optimum:
                                         optimum = sum(the_set)
                                         set_str = the_set
-                                        print(optimum, set_str)
-    print(optimum, set_str)
+    print(optimum, set_str, sep='\n')
 
 
 if __name__ == '__main__':
