@@ -1,11 +1,12 @@
 
 __author__ = 'yxy'
 
-__all__ = ['factorization', 'gcd', 'is_prime', 'is_prob_prime',
-           'nCr', 'nPr', 'permutation', 'permutation_formatted',
-           'prime_factorization', 'factors', 'prime_factors_under',
-           'prime_under', 'product', 'product_mod', 'to_base',
-           'prime_factors_under_lazy_hq',
+__all__ = ['gcd', 'nCr', 'nPr', 'product', 
+           'product_mod', 'to_base',
+           'is_prime', 'is_prob_prime', 
+           'prime_under', 'prime_factorization',
+           'factors', 'prime_factors_under',
+           'prime_factors_under_lazy_heap',
            'prime_factors_under_lazy_dict']
 
 import random
@@ -126,7 +127,7 @@ def is_prime_array(ceiling):
     return is_prime_arr
 
 
-def prime_factors_under_lazy_hq(ceiling):
+def prime_factors_under_lazy_heap(ceiling):
     update = []  # a list of tuples, (num, p), num->next number that factor p
 
     heapq.heappush(update, (4, 2))
@@ -196,44 +197,42 @@ def prime_factorization_under(ceiling):
             yield factor.pop()
 
 
-def factorization(n, start=2):
-    if start * start > n:
-        return [[n]]
+# def factorization(n, start=2):
+#     if start * start > n:
+#         return [[n]]
 
-    the_factorization = [[n]]
-    for i in range(start, int(n ** 0.5) + 1):
-        if n % i == 0:
-            fac = factorization(n // i, i)
-            for each in fac:
-                each.append(i)
-            the_factorization.extend(fac)
-
-    return the_factorization
-
-
-def permutation(characters):
-    """
-    *DEPRECATED*, use itertools.permutations instead
-    
-    input: a list of characters, repeat allowed, counted only once
-    output: all possible permutations of the given list
-    """
-    if len(characters) == 1:
-        return [characters]
-
-    result = []
-    for i in range(len(characters)):
-        result.extend([j + [characters[i]] for j in permutation(characters[:i] + characters[i+1:])])
-
-    return result
+#     the_factorization = [[n]]
+#     for i in range(start, int(n ** 0.5) + 1):
+#         if n % i == 0:
+#             fac = factorization(n // i, i)
+#             for each in fac:
+#                 each.append(i)
+#             the_factorization.extend(fac)
+# 
+#     return the_factorization
 
 
-def permutation_formatted(numbers):
-    result = permutation(numbers)
-    return sorted(set([tuple(i) for i in result]))
+# def permutation(characters):
+#     """
+#     *DEPRECATED*, use itertools.permutations instead
+#     
+#     input: a list of characters, repeat allowed, counted only once
+#     output: all possible permutations of the given list
+#     """
+#     if len(characters) == 1:
+#         return [characters]
+
+#     result = []
+#     for i in range(len(characters)):
+#         result.extend([j + [characters[i]] for j in permutation(characters[:i] + characters[i+1:])])
+
+#     return result
 
 
-"""
-def gcd(x, y):
-    return x if y == 0 else gcd(y, x % y)
-"""
+# def permutation_formatted(numbers):
+#     result = permutation(numbers)
+#     return sorted(set([tuple(i) for i in result]))
+
+
+# def gcd(x, y):
+#     return x if y == 0 else gcd(y, x % y)
