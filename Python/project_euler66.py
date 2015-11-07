@@ -35,33 +35,6 @@ def is_square(x):
     return x == int(sqrt(x)) ** 2
 
 
-def int_sqrt(x):
-    L = 1
-    H = x
-    if H<L: L, H = H, L
-    while H - L > 1:
-        m = int((L+H)//2)
-        d = x//m
-        if d > m: L = m
-        else: H = m
-
-    if L*L == x:
-        return L, True
-    if H*H == x:
-        return H, True
-    return H, False
-
-
-def pell_brute_force(d):  # generally slow, not to use
-    y = 1
-    while True:
-        x, is_solution = int_sqrt(d * y * y + 1)
-        if is_solution:
-            # print("D =", d, "solution: x =", x, ", y =", y)
-            return x, y
-        y += 1
-
-
 def pell(d):
     sequence = continued_fraction_period(d)
     # print(d, len(sequence), sequence)

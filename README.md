@@ -1,6 +1,6 @@
 # Project Euler
 
-[project euler](projecteuler.net) is a website that offers challenging math and computer science problems. 
+[project euler](https://projecteuler.net) is a website that offers challenging math and computer science problems. 
 
 Starting around May, 2014, I have been solving problems on project euler, both for fun and for learning. By solving these problems, I have improved both my math skills and algorithmic thinking skills.
 
