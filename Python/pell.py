@@ -159,13 +159,22 @@ def pell(d, negative=False):
     return x, y
 
 
-def next_solution(d, x_1, y_1, x_n, y_n):
+def next_solution(d, x_1, y_1, x_n, y_n, neg=False):
     """
+    when neg == False
     find next solution to the pell equation
     x**2 - d * y**2 = 1
+
+    when neg == True
+    find next solution to the pell equation
+    x**2 - d * y**2 = -1
     
     Args:
         x_1, y_1: the fundamental Solution to the equation
         x_n, y_n: the previous Solution to the equation
     """
-    return x_1*x_n + d*y_1*y_n, x_1*y_n + y_1*x_n
+    if not neg:
+        return x_1*x_n + d*y_1*y_n, x_1*y_n + y_1*x_n
+    else:
+        mid_x, mid_y = x_1*x_n + d*y_1*y_n, x_1*y_n + y_1*x_n
+        return x_1*mid_x + d*y_1*mid_y, x_1*mid_y + y_1*mid_x
