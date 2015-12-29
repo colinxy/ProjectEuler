@@ -11,7 +11,6 @@ using namespace std;
 int64_t Mathutil::sum(int64_t from, int64_t to, int64_t diff) {
     if (to < from) return 0;
 
-    to = to - to % diff;
     int64_t size = (to - from) / diff + 1;
 
     if ((from + to) % 2 == 0)
