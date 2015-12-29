@@ -8,13 +8,52 @@
 using namespace std;
 
 
-/*
- * no integer overflow is checked!!!
- */
-// int64_t pow(int base, int exp) {}
+int64_t Mathutil::sum(int64_t from, int64_t to, int64_t diff) {
+    if (to < from) return 0;
+
+    to = to - to % diff;
+    int64_t size = (to - from) / diff + 1;
+
+    if ((from + to) % 2 == 0)
+        return (from + to) / 2 * size;
+    return size / 2 * (from + to);
+}
 
 
-bool is_prime(long n) {
+int64_t pow(int64_t base, int exp) {
+    int64_t result = 1;
+    while (exp) {
+        if (exp & 1) result *= base;
+        exp >>= 1;
+        result *= result;
+    }
+    return result;
+
+    /*
+    if (exp == 0)
+        return 1;
+
+    if (exp % 2 == 0)
+        return pow(base*base, exp/2);
+
+    else
+        return pow(base*base, exp/2) * base;
+    */
+}
+
+
+int64_t pow(int64_t base, int exp, int64_t mod) {
+    int64_t result = 1;
+    while (exp) {
+        if (exp & 1) result = result * base % mod;
+        exp >>= 1;
+        result = result * result % mod;
+    }
+    return result;
+}
+
+
+bool Mathutil::is_prime(int64_t n) {
     if (n <= 3) return n >= 2;
     if (n % 2 == 0 || n % 3 == 0) return false;
 
@@ -28,7 +67,7 @@ bool is_prime(long n) {
 /*
  * primes: empty integer vector with enough space resevered (preferred)
  */
-size_t prime_under(vector<int> &primes, size_t n) {
+size_t Mathutil::prime_under(vector<int> &primes, size_t n) {
     size_t size = 0;
     vector<bool> isPrime(n, true);
 

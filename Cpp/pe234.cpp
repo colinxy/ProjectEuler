@@ -8,24 +8,19 @@
 #include "mathutil.h"
 using namespace std;
 
+using Mathutil::prime_under;
+using Mathutil::sum;
+
 
 const int64_t N = 999966663333L;
 const int sqrtN = (int) sqrt(N);
-
-inline int64_t sum(int64_t from, int64_t to, int64_t diff) {
-    int64_t size = (to - from) / diff + 1;
-
-    if ((from + to) % 2 == 0)
-        return (from + to) / 2 * size;
-    return size / 2 * (from + to);
-}
 
 
 int64_t subsum(int64_t p1, int64_t p2) {
     int64_t p1_sq = p1*p1;
     int64_t p2_sq = p2*p2;
 
-    int64_t p1_sum = sum(p1_sq + p1, p2_sq - p2_sq % p1, p1);
+    int64_t p1_sum = sum(p1_sq + p1, p2_sq, p1);
     int64_t p2_sum = sum(p1_sq - p1_sq % p2 + p2, p2_sq - p2, p2);
 
     return p1_sum + p2_sum - 2 * p1 * p2;
@@ -52,8 +47,8 @@ int main() {
     int64_t p1 = 999983;
     int64_t p2 = 1000003;
     // observation p1 * p2 < N
-    semidiv_sum += sum(p1*p1 + p1, N - N%p1, p1);
-    semidiv_sum += sum(p1*p1 - p1*p1%p2 + p2, N - N%p2, p2);
+    semidiv_sum += sum(p1*p1 + p1, N, p1);
+    semidiv_sum += sum(p1*p1 - p1*p1%p2 + p2, N, p2);
 
     cout << semidiv_sum << endl;
 
