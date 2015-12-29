@@ -34,8 +34,8 @@ int main() {
         while (true) {
             int temp_a = a, temp_b = b;
             a = (a+b+c) % div;
-            b = temp_a % div;
-            c = temp_b % div;
+            b = temp_a;
+            c = temp_b;
 
             if (a == 0) break;
             if (a == 1 && b == 1 && c == 1) {

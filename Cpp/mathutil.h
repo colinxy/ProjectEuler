@@ -4,6 +4,9 @@
 #ifndef MATHUTIL_H
 #define MATHUTIL_H
 
+#include <iostream>
+#include <vector>
+
 
 namespace Mathutil {
       // functions for arithmetic utility
@@ -13,7 +16,7 @@ namespace Mathutil {
 
       // functions for dealing with prime numbers
     bool   is_prime(int64_t n);
-    size_t prime_under(vector<int> &primes, size_t n);
+    size_t prime_under(std::vector<int> &primes, size_t n);
 }
 
 #endif  // MATHUTIL_H
