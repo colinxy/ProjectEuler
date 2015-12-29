@@ -9,7 +9,7 @@ using namespace std;
 const int SIZE = 1000000000;
 const int DEGREE = 1000;
 
-void print(vector<int> v) {
+void print(vector<int> &v) {
     for (size_t i = 0; i < v.size(); ++i) {
         cout << v[i] << endl;
     }
@@ -19,7 +19,7 @@ bool isPrime(int n) {
     if (n <= 3) return n >= 2;
     if (n % 2 == 0 || n % 3 == 0) return false;
 
-    for (size_t p = 5, limit = (int)sqrt(n)+1; p < limit; p+=6) {
+    for (size_t p = 5, limit = (uint)sqrt(n)+1; p < limit; p+=6) {
         if (n % p == 0) return false;
         if (n % (p+2) == 0) return false;
     }
@@ -29,7 +29,7 @@ bool isPrime(int n) {
 vector<bool> getIsPrimeArray(unsigned long top) {
     assert(sizeof(size_t) == 8);
     vector<bool> isPrime(top, true);
-    
+
     for (size_t i = 2; i < top; ++i) {
         if (isPrime[i]) {
             // assume sizeof(size_t) == 8
@@ -38,7 +38,7 @@ vector<bool> getIsPrimeArray(unsigned long top) {
             }
         }
     }
-    
+
     return isPrime;
 }
 /*
@@ -80,7 +80,7 @@ int main() {
         }
     }
     // print(primes);
-    
+
     vector<int> admissible;
     for (int i = 2; i < SIZE; i *= 2) {
         admissible.push_back(i);
