@@ -1,0 +1,21 @@
+#! /bin/sh
+
+# run a specific cpp file and time it
+
+filename=$(basename $1)
+executable="${filename%.*}".out
+
+# make sure mathutil is up to date
+LIBRARY="mathutil.o"
+make -s
+
+# TODO: add check whether source file need mathutil
+
+g++ -o $executable $filename $LIBRARY -std=c++11 -O2
+
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+time ./$executable
+rm $executable

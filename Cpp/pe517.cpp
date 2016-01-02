@@ -60,10 +60,9 @@ int main() {
     for (int i = 10000000; i < 10010000; ++i) {
         if (is_prime(i)) {
             primes.push_back(i);
-            // cout << G(i) << endl;
         }
     }
-    cout << primes.size() << endl;
+    // cout << primes.size() << endl;
 
     return 0;
 }
