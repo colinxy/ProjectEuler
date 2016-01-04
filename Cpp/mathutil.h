@@ -11,8 +11,9 @@
 namespace Mathutil {
       // arithmetic utility
     int64_t sum(int64_t, int64_t, int64_t);
-    int64_t pow(int64_t, int);
-    int64_t pow(int64_t, int, int64_t);
+    size_t  pow(size_t, size_t);
+    size_t  pow(size_t, size_t, size_t);
+    size_t  pow_s(size_t, size_t, size_t);
 
     int64_t gcd(int64_t, int64_t);
 
@@ -21,8 +22,8 @@ namespace Mathutil {
     uint64_t nCr_s(unsigned int, unsigned int);
 
       // dealing with prime numbers
-    bool   is_prime(int64_t);
-    bool   miller_rabin(int64_t);
+    bool   is_prime(size_t);
+    bool   miller_rabin(size_t);
     size_t prime_under(std::vector<int> &primes, size_t n);
 }
 

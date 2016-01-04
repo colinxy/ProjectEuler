@@ -7,13 +7,25 @@ executable="${filename%.*}".out
 
 # make sure mathutil is up to date
 LIBRARY="mathutil.o"
+LIB_HDR="mathutil.h"
 make -s
 
-# TODO: add check whether source file need mathutil
+# if library does not make successfully
+if [ $? -ne 0 ]; then
+    echo "*** FAIL TO COMPILE LIBRARY ***"
+    exit 1
+fi
 
-g++ -o $executable $filename $LIBRARY -std=c++11 -O2
+# check whether source file need LIBRARY
+if grep "^#include\s*\"$LIB_HDR\"\s*$" $filename > /dev/null
+then
+    g++ -o $executable $filename $LIBRARY -std=c++11 -O2
+else
+    g++ -o $executable $filename -std=c++11 -O2
+fi
 
 if [ $? -ne 0 ]; then
+    echo "*** FAIL TO COMPILE $filename ***"
     exit 1
 fi
 

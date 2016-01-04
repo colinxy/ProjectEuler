@@ -54,7 +54,7 @@ int64_t G(int x) {
 }
 
 int main() {
-    cout << G(10000) << endl;
+    // cout << G(10000) << endl;
 
     vector<int> primes;
     for (int i = 10000000; i < 10010000; ++i) {

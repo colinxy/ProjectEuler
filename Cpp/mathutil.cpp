@@ -2,8 +2,12 @@
 
 
 #include <iostream>
+#include <algorithm>
 #include <cmath>
+#include <array>
 #include <vector>
+#include <utility>
+#include <stdexcept>
 #include "mathutil.h"
 using namespace std;
 
@@ -25,8 +29,8 @@ int64_t Mathutil::sum(int64_t from, int64_t to, int64_t diff) {
 }
 
 
-int64_t Mathutil::pow(int64_t base, int exp) {
-    int64_t result = 1;
+size_t Mathutil::pow(size_t base, size_t exp) {
+    size_t result = 1;
     while (exp) {
         if (exp & 1) result *= base;
         exp >>= 1;
@@ -47,11 +51,35 @@ int64_t Mathutil::pow(int64_t base, int exp) {
 }
 
 
-int64_t Mathutil::pow(int64_t base, int exp, int64_t mod) {
-    int64_t result = 1;
+size_t Mathutil::pow(size_t base, size_t exp, size_t mod) {
+    size_t result = 1;
+    base %= mod;
     while (exp) {
         if (exp & 1) result = result * base % mod;
         exp >>= 1;
+        result = result * result % mod;
+    }
+    return result;
+}
+
+
+// overflow safe
+size_t Mathutil::pow_s(size_t base, size_t exp, size_t mod) {
+    size_t result = 1;
+    base %= mod;
+    while (exp) {
+        if (exp & 1) {
+            if (result > numeric_limits<size_t>::max() / base) {
+                throw overflow_error("overflow in computing modular exponentiation");
+            }
+            result = result * base % mod;
+        }
+
+        exp >>= 1;
+
+        if (result > numeric_limits<size_t>::max() / result) {
+            throw overflow_error("overflow in computing modular exponentiation");
+        }
         result = result * result % mod;
     }
     return result;
@@ -136,16 +164,74 @@ uint64_t Mathutil::nCr_s(unsigned int n, unsigned int k) {
  */
 
 
-bool Mathutil::is_prime(int64_t n) {
+bool Mathutil::is_prime(size_t n) {
     if (n <= 3) return n >= 2;
-    if (n % 2 == 0 || n % 3 == 0) return false;
+    if (!(n & 1) || n % 3 == 0) return false;
 
-    for (size_t p = 5, limit = (int64_t)sqrt(n)+1; p < limit; p += 6) {
+    for (size_t p = 5, limit = (size_t)sqrt(n)+1; p < limit; p += 6) {
         if (n % p == 0) return false;
         if (n % (p+2) == 0) return false;
     }
     return true;
 }
+
+
+/*
+ * n-1 = 2^s * d
+ *
+ * a^d % n == 1  OR
+ * a^(2^r*d) % n == -1   0 <= r <= s-1
+ */
+
+inline bool witness(size_t n, size_t a, size_t s, size_t d) {
+    size_t rem = Mathutil::pow_s(a, d, n);
+    if (rem == 1) return true;  // probable prime
+
+    for (size_t i = 0; i < s; ++i) {
+        rem = rem * rem % n;
+
+        if (rem == 1)   return false;
+        if (rem == n-1) return true;  // probable prime
+    }
+
+    return false;
+}
+
+/*
+ * if n < 1,373,653, it is enough to test a = 2 and 3;
+ * if n < 9,080,191, it is enough to test a = 31 and 73;
+ * if n < 4,759,123,141, it is enough to test a = 2, 7, and 61;
+ * if n < 1,122,004,669,633, it is enough to test a = 2, 13, 23, and 1662803;
+ * if n < 2,152,302,898,747, it is enough to test a = 2, 3, 5, 7, and 11;
+ * if n < 3,474,749,660,383, it is enough to test a = 2, 3, 5, 7, 11, and 13;
+ * if n < 341,550,071,728,321, it is enough to test a = 2, 3, 5, 7, 11, 13, and 17.
+ *
+ * if n < 18,446,744,073,709,551,616 = 2^64,
+ * it is enough to test a = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, and 37
+ */
+
+bool Mathutil::miller_rabin(size_t n) {
+    if (n <= 3) return n >= 2;
+    if (!(n & 1) || n % 3 == 0) return false;
+
+    size_t s = 0;
+    size_t d = n-1;
+
+    while (!(d & 1)) {
+        d /= 2;
+        ++s;
+    }
+
+    array<size_t, 12> small_primes {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
+
+    for (auto p : small_primes) {
+        if (!witness(n, p, s, d))
+            return false;
+    }
+
+    return true;
+}
+
 
 /*
  * @param
