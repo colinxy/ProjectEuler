@@ -63,14 +63,27 @@ size_t Mathutil::pow(size_t base, size_t exp, size_t mod) {
 }
 
 
-// overflow safe
+size_t pow_mod(size_t base, size_t exp, size_t mod) {
+    size_t result = 1;
+    base %= mod;
+    for (size_t i = 0; i < exp; ++i)
+        result = result * base % mod;
+
+    return result;
+}
+
+
+// less possible to overflow
+// revert to
 size_t Mathutil::pow_s(size_t base, size_t exp, size_t mod) {
     size_t result = 1;
     base %= mod;
     while (exp) {
         if (exp & 1) {
             if (result > numeric_limits<size_t>::max() / base) {
-                throw overflow_error("overflow in computing modular exponentiation");
+                // throw overflow_error("overflow in computing modular exponentiation");
+                cout << "overflow for exponent algorithm, using product algorithm" << endl;
+                return pow_mod(base, exp, mod);
             }
             result = result * base % mod;
         }
@@ -78,7 +91,8 @@ size_t Mathutil::pow_s(size_t base, size_t exp, size_t mod) {
         exp >>= 1;
 
         if (result > numeric_limits<size_t>::max() / result) {
-            throw overflow_error("overflow in computing modular exponentiation");
+            // throw overflow_error("overflow in computing modular exponentiation");
+            return pow_mod(base, exp, mod);
         }
         result = result * result % mod;
     }
@@ -164,7 +178,7 @@ uint64_t Mathutil::nCr_s(unsigned int n, unsigned int k) {
  */
 
 
-bool Mathutil::is_prime(size_t n) {
+bool Mathutil::is_prime(const size_t n) {
     if (n <= 3) return n >= 2;
     if (!(n & 1) || n % 3 == 0) return false;
 
@@ -183,16 +197,16 @@ bool Mathutil::is_prime(size_t n) {
  * a^(2^r*d) % n == -1   0 <= r <= s-1
  */
 
-inline bool witness(size_t n, size_t a, size_t s, size_t d) {
-    size_t rem = Mathutil::pow_s(a, d, n);
-    if (rem == 1) return true;  // probable prime
+bool witness(size_t n, size_t a, size_t s, size_t d) {
+    // size_t rem = Mathutil::pow_s(a, d, n);
+    // if (rem == 1) return true;  // probable prime
 
-    for (size_t i = 0; i < s; ++i) {
-        rem = rem * rem % n;
+    // for (size_t i = 0; i < s; ++i) {
+    //     rem = rem * rem % n;
 
-        if (rem == 1)   return false;
-        if (rem == n-1) return true;  // probable prime
-    }
+    //     if (rem == 1)   return false;
+    //     if (rem == n-1) return true;  // probable prime
+    // }
 
     return false;
 }
@@ -222,7 +236,8 @@ bool Mathutil::miller_rabin(size_t n) {
         ++s;
     }
 
-    array<size_t, 12> small_primes {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
+    array<size_t, 12> small_primes ({2, 3, 5, 7, 11, 13, 17, 19,
+                23, 29, 31, 37});
 
     for (auto p : small_primes) {
         if (!witness(n, p, s, d))

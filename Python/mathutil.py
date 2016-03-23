@@ -1,14 +1,3 @@
-
-__author__ = 'yxy'
-
-__all__ = ['gcd', 'nCr', 'nPr', 'product', 
-           'product_mod', 'to_base',
-           'is_prime', 'is_prob_prime', 
-           'prime_under', 'prime_factorization',
-           'factors', 'prime_factors_under',
-           'prime_factors_under_lazy_heap',
-           'prime_factors_under_lazy_dict']
-
 import random
 from fractions import gcd
 from functools import reduce
@@ -17,6 +6,16 @@ from operator import mul
 from collections import defaultdict
 import heapq
 import numpy as np
+
+__author__ = 'yxy'
+
+# __all__ = ['gcd', 'nCr', 'nPr', 'product',
+#            'product_mod', 'to_base',
+#            'is_prime', 'is_prob_prime',
+#            'prime_under', 'prime_factorization',
+#            'factors', 'prime_factors_under',
+#            'prime_factors_under_lazy_heap',
+#            'prime_factors_under_lazy_dict']
 
 
 def product(iterable, start=1):
@@ -28,16 +27,20 @@ def product_mod(iterable, mod, start=1):
 
 
 def nCr(m, n):
+    """Choose n out of m"""
+    if n > m / 2:
+        n = m - n
     result = 1
-    for i in range(1, n+1):
-        result *= m-n+1
+    for i in range(1, n + 1):
+        result *= m - i + 1
         result //= i
     return result
 
 
 def nPr(m, n):
+    """Arrange n out of m"""
     result = 1
-    for i in range(m, m-n, -1):
+    for i in range(m, m - n, -1):
         result *= i
     return result
 
@@ -62,7 +65,14 @@ def is_prime(n):
 
 
 def is_prob_prime(p, n=20):
-    return all([pow(random.randint(1, p-1), p-1, p) == 1 for _ in range(n)])
+    return all(pow(random.randint(1, p - 1), p - 1, p) == 1
+               for _ in range(n))
+
+
+def miller_rabin(p):
+    """correct for n < 3,825,123,056,546,413,051"""
+    return all(pow(witness, p - 1, p) == 1
+               for witness in [2, 3, 5, 7, 11, 13, 17, 19, 23])
 
 
 def prime_factorization(n):
@@ -208,14 +218,14 @@ def prime_factorization_under(ceiling):
 #             for each in fac:
 #                 each.append(i)
 #             the_factorization.extend(fac)
-# 
+#
 #     return the_factorization
 
 
 # def permutation(characters):
 #     """
 #     *DEPRECATED*, use itertools.permutations instead
-#     
+#
 #     input: a list of characters, repeat allowed, counted only once
 #     output: all possible permutations of the given list
 #     """

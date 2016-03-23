@@ -8,7 +8,8 @@ executable="${filename%.*}".out
 # make sure mathutil is up to date
 LIBRARY="mathutil.o"
 LIB_HDR="mathutil.h"
-make -s
+
+make
 
 # if library does not make successfully
 if [ $? -ne 0 ]; then
@@ -29,5 +30,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "running $executable"
 time ./$executable
 rm $executable

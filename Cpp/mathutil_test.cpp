@@ -23,18 +23,20 @@ int main() {
     // nCr_s
 
     // is_prime
+    cout << "testing is_prime" << endl;
     size_t primes[] = {37, 101, 947, 7873, 2147483647};
-    for (size_t i = 0; i < sizeof(primes)/sizeof(size_t); ++i) {
-        if (!is_prime(primes[i]))
-            cerr << "fail to detect " << primes[i] << endl;
+    for (size_t p : primes) {
+        if (! is_prime(p))
+            cerr << "fail to detect " << p << endl;
     }
 
     // miller_rabin
+    cout << "testing miller rabin" << endl;
     for (size_t i = 0; i < sizeof(primes)/sizeof(size_t); ++i) {
         if (!miller_rabin(primes[i]))
             cerr << "fail to detect " << primes[i] << endl;
     }
-    size_t large_primes[] = {2147483647, 200560490131, 63018038201, 688846502588399};
+    size_t large_primes[] = {2147483647L, 200560490131L, 63018038201L, 688846502588399L};
     for (size_t i = 0; i < sizeof(large_primes)/sizeof(size_t); ++i) {
         if (!miller_rabin(large_primes[i]))
             cerr << "fail to detect " << large_primes[i] << endl;
