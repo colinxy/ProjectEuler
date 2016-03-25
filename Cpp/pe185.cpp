@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
+#include <sstream>
+#include <utility>
+#include <unordered_map>
 using namespace std;
 
 
@@ -20,7 +24,7 @@ const vector<vector<int> > guesses {
 };
 const vector<size_t> numCorrect {2, 0, 2, 1, 2, 1};
 
-// reordered!!!
+// reordered in ascending order
 // different in sequence from the problem
 const vector<vector<int> > guessesBig {
     {2, 3, 2, 1, 3, 8, 6, 1, 0, 4, 3, 0, 3, 8, 4, 5},
@@ -99,39 +103,59 @@ public:
     NumberMind(const vector<vector<int> > &guesses,
                const vector<size_t> &numCorrect)
         : m_guesses(guesses)
-        , m_numCorrect(numCorrect) {
+        , m_numCorrect(numCorrect)
+        , m_result(LENGTH, -1) {
     }
 
     // solve by column
     vector<int> solve() {
-        vector<int> result(LENGTH, -1);
+        solutionFound = false;
+        // second half
+        solveSub(LENGTH/2, LENGTH, true);
+        cout << "cache computed" << endl;
+        // first half
+        solveSub(0, LENGTH/2, false);
+
+        if (!solutionFound)
+            cerr << "No solution" << endl;
+
+        return m_result;
+    }
+
+private:
+    // solve a subproblem
+    // from <= index < end
+    void solveSub(size_t begin, size_t end, bool fillCache) {
         vector<Guess> correctness(NUM_GUESSES);
 
-        size_t index = 0;      // current index in the result sequence
-        while (index < LENGTH) {
-            if (result[index] == -1) {
-                result[index] = 0;
-            } else if (result[index] == 9) {
-                result[index] = -1;
+        size_t index = begin;      // current index in the result sequence
+        while (index < end) {
+            if (m_result[index] == -1) {
+                m_result[index] = 0;
+            } else if (m_result[index] == 9) {
+                if (index == begin)
+                    break;
+
+                m_result[index] = -1;
                 setIncorrect(index, correctness, NUM_GUESSES);
                 index--;
                 continue;
             } else {
                 setIncorrect(index, correctness, NUM_GUESSES);
-                result[index]++;
+                m_result[index]++;
             }
 
-            if (index == 6) {
-                for (size_t i = 0; i <= index; ++i)
-                    cout << result[i];
+            if (index == begin) {
+                for (size_t i = begin; i < end; ++i)
+                    cout << m_result[i];
                 cout << endl;
             }
-            // cout << "index: " << index << " val: " << result[index] << endl;
+            // cout << "ind: " << index << " val: " << m_result[index] << endl;
 
             // propagate constraint
             bool satisfactory = true;
             for (size_t i = 0; i < NUM_GUESSES; ++i) {
-                if (m_guesses[i][index] == result[index]) {
+                if (m_guesses[i][index] == m_result[index]) {
                     correctness[i].setCorrect(index);
 
                     if (correctness[i].numCorrect() > m_numCorrect[i]) {
@@ -146,25 +170,46 @@ public:
 
             // cout << endl;
             // for (size_t i = 0; i < LENGTH; ++i)
-            //     cout << result[i];
+            //     cout << m_result[i];
             // cout << endl;
-            // for (size_t i = 0; i < NUM_GUESSES; ++i) {
-            //     for (size_t j = 0; j < LENGTH; ++j)
-            //         cout << correctness[i][j];
-            //     cout << endl;
-            // }
 
-            if (index == LENGTH-1) {
-                for (size_t i = 0; i < NUM_GUESSES; ++i) {
-                    if (correctness[i].numCorrect() != m_numCorrect[i]) {
-                        setIncorrect(index, correctness, NUM_GUESSES);
-                        satisfactory = false;
-                        break;
+            if (index == end-1) {
+                // for second half of the problem
+                if (fillCache) {
+                    vector<size_t> remainNumCorrect(m_numCorrect);
+                    for (size_t i = 0; i < NUM_GUESSES; ++i) {
+                        remainNumCorrect[i] -= correctness[i].numCorrect();
+                    }
+                    vector<int> result(m_result.begin() + begin,
+                                       m_result.begin() + end);
+
+                    pair<string, vector<int> > pr(
+                        vec2string(remainNumCorrect), result);
+                    m_secondHalfCache.insert(pr);
+                }
+                // for first half of the problem
+                else {
+                    vector<size_t> numCorrect;
+                    for (size_t i = 0; i < NUM_GUESSES; ++i) {
+                        numCorrect.push_back(correctness[i].numCorrect());
+                    }
+                    auto got = m_secondHalfCache.
+                        find(vec2string(numCorrect));
+
+                    if (got != m_secondHalfCache.end()) {
+                        solutionFound = true;
+
+                        const vector<int> &otherHalf = got->second;
+
+                        // copy into result
+                        size_t j = 0;
+                        for (size_t i = LENGTH/2; i < LENGTH; ++i)
+                            m_result[i] = otherHalf[j++];
+                        return;
                     }
                 }
-            }
-            if (!satisfactory)
                 continue;
+            }
 
             index++;
         }
@@ -175,11 +220,8 @@ public:
         //     cout << endl;
         //     cout << correctness[i].numCorrect() << endl;
         // }
-
-        return result;
     }
 
-private:
     static void setIncorrect(size_t index, vector<Guess> &correctness,
         size_t before) {
 
@@ -188,8 +230,19 @@ private:
         }
     }
 
+    string vec2string(const vector<size_t> &vec) {
+        stringstream ss;
+        for (size_t i : vec)
+            ss << i;
+        return ss.str();
+    }
+
     const vector<vector<int> > m_guesses;
     const vector<size_t> m_numCorrect;
+
+    unordered_map<string, vector<int> > m_secondHalfCache;
+    vector<int> m_result;
+    bool solutionFound;
 };
 
 
