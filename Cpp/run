@@ -9,7 +9,7 @@ executable="${filename%.*}".out
 LIBRARY="mathutil.o"
 LIB_HDR="mathutil.h"
 
-make
+make -s
 
 # if library does not make successfully
 if [ $? -ne 0 ]; then
