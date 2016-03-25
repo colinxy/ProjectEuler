@@ -85,14 +85,6 @@ struct Guess {
     }
 
 private:
-    // bool check() const {
-    //     size_t count = 0;
-    //     for (size_t i = 0; i < LENGTH; ++i)
-    //         if (guess[i])
-    //             ++count;
-    //     return correct == count;
-    // }
-
     size_t correct;
     bool guess[LENGTH];
 };
@@ -110,14 +102,17 @@ public:
     // solve by column
     vector<int> solve() {
         solutionFound = false;
-        // second half
+        // second half, latter half of the sequence
         solveSub(LENGTH/2, LENGTH, true);
-        cout << "cache computed" << endl;
-        // first half
+        // cout << "cache computed" << endl;
+        // first half, former half of the sequence
         solveSub(0, LENGTH/2, false);
 
-        if (!solutionFound)
-            cerr << "No solution" << endl;
+        if (!solutionFound) {
+            cerr << "No Solution" << endl;
+            for (size_t i = 0; i < LENGTH; ++i)
+                m_result[i] = -1;
+        }
 
         return m_result;
     }
@@ -145,12 +140,11 @@ private:
                 m_result[index]++;
             }
 
-            if (index == begin) {
-                for (size_t i = begin; i < end; ++i)
-                    cout << m_result[i];
-                cout << endl;
-            }
-            // cout << "ind: " << index << " val: " << m_result[index] << endl;
+            // if (index == begin) {
+            //     for (size_t i = begin; i < end; ++i)
+            //         cout << m_result[i];
+            //     cout << endl;
+            // }
 
             // propagate constraint
             bool satisfactory = true;
@@ -183,9 +177,9 @@ private:
                     vector<int> result(m_result.begin() + begin,
                                        m_result.begin() + end);
 
-                    pair<string, vector<int> > pr(
+                    pair<string, vector<int> > cachePair(
                         vec2string(remainNumCorrect), result);
-                    m_secondHalfCache.insert(pr);
+                    m_secondHalfCache.insert(cachePair);
                 }
                 // for first half of the problem
                 else {
@@ -196,6 +190,7 @@ private:
                     auto got = m_secondHalfCache.
                         find(vec2string(numCorrect));
 
+                    // solution found
                     if (got != m_secondHalfCache.end()) {
                         solutionFound = true;
 
@@ -213,13 +208,6 @@ private:
 
             index++;
         }
-
-        // for (size_t i = 0; i < NUM_GUESSES; ++i) {
-        //     for (size_t j = 0; j < LENGTH; ++j)
-        //         cout << correctness[i][j];
-        //     cout << endl;
-        //     cout << correctness[i].numCorrect() << endl;
-        // }
     }
 
     static void setIncorrect(size_t index, vector<Guess> &correctness,
@@ -230,7 +218,7 @@ private:
         }
     }
 
-    string vec2string(const vector<size_t> &vec) {
+    static string vec2string(const vector<size_t> &vec) {
         stringstream ss;
         for (size_t i : vec)
             ss << i;
