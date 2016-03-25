@@ -1,15 +1,23 @@
 
 class NumberMind:
+
     def __init__(self, guesses, correctness):
         self.guesses = []
         for line in guesses.splitlines():
             self.guesses.append(list(map(int, line)))
         self.correctness = correctness
         assert len(self.guesses) == len(self.correctness)
-        self.trial = len(self.guesses)
-        self.size = len(self.guesses[0])
-        self.sequence = [-1] * self.size  # final answer
-        self.check = [([False] * self.size) for _ in range(self.trial)]
+
+        self.trial = len(self.guesses)    # number of guesses
+        self.size = len(self.guesses[0])  # size of the sequence
+        self.sequence = [-1] * self.size  # final sequence
+        self.check = [[False] * self.size for _ in range(self.trial)]
+
+        ordered = sorted(zip(self.correctness, self.guesses))
+        print(',\n'.join(str(j)
+                         for i, j in ordered).
+              replace('[', '{').replace(']', '}'))
+        print(str([i for i, j in ordered]).replace('[', '{').replace(']', '}'))
 
     def solve(self):
         try:
@@ -21,19 +29,20 @@ class NumberMind:
     def _solve(self, row, col):
         if self.sequence[col] == self.guesses[row][col]:
             self.check[row][col] = True
-            if self.check[row][:col+1].count(True) > self.correctness[row]:
+            if self.check[row][:col + 1].count(True) > self.correctness[row]:
                 self.check[row][col] = False
                 return
-            if col == self.size-1:
+            if col == self.size - 1:
                 if self.check[row].count(True) != self.correctness[row]:
                     return
-                elif row == self.trial-1:
+                elif row == self.trial - 1:
                     print(self.sequence)
                     raise Exception("solution found")
-                self._solve(row+1, 0)
+                self._solve(row + 1, 0)
             else:
-                self._solve(row, col+1)
+                self._solve(row, col + 1)
             self.sequence[col] = -1
+
         else:
             # has to be False
             if self.sequence[col] == -1:
@@ -46,33 +55,34 @@ class NumberMind:
                     if self.sequence[col] == -1 and self.check[row][:col].count(True) < self.correctness[row]:
                         self.check[row][col] = True
                         self.sequence[col] = self.guesses[row][col]
-                        if col == self.size-1:
+                        if col == self.size - 1:
                             if self.check[row].count(True) != self.correctness[row]:
                                 self.check[row][col] = False
                                 self.sequence[col] = -1
                                 return
-                            elif row == self.trial-1:
+                            elif row == self.trial - 1:
                                 print(self.sequence)
                                 raise Exception("solution found")
-                            self._solve(row+1, 0)
+                            self._solve(row + 1, 0)
                         else:
-                            self._solve(row, col+1)
+                            self._solve(row, col + 1)
                         self.sequence[col] = -1
 
             # False
             self.check[row][col] = False
-            if col == self.size-1:
+            if col == self.size - 1:
                 if self.check[row].count(True) != self.correctness[row]:
                     return
-                elif row == self.trial-1:
+                elif row == self.trial - 1:
                     print(self.sequence)
                     raise Exception("solution found")
-                self._solve(row+1, 0)
+                self._solve(row + 1, 0)
             else:
-                self._solve(row, col+1)
+                self._solve(row, col + 1)
 
     def __str__(self):
-        return '\n'.join(str(i)+'  '+str(j) for i, j in zip(self.guesses, self.correctness))
+        return '\n'.join(str(i) + '  ' + str(j)
+                         for i, j in zip(self.guesses, self.correctness))
 
 
 def main():
@@ -108,8 +118,10 @@ def main():
                "1841236454324589\n"
                "2659862637316867\n"
                )
-    correctness = [2, 1, 3, 3, 3, 1, 2, 3, 1, 2, 3, 1, 1, 2, 0, 2, 2, 3, 1, 3, 3, 2]
-    print(''.join(map(str, NumberMind(guesses_tiny, correctness_tiny).solve())))
+    correctness = [2, 1, 3, 3, 3, 1, 2, 3, 1,
+                   2, 3, 1, 1, 2, 0, 2, 2, 3, 1, 3, 3, 2]
+    print(''.join(map(str,
+                      NumberMind(guesses, correctness).solve())))
 
 
 if __name__ == '__main__':
