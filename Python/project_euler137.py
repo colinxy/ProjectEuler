@@ -19,7 +19,9 @@ key:
 solve pell equation of the form
 u**2 - 5 * v**2 = -4
 
-odd fundamental solution (11, 5) exists
+because odd fundamental solution (11, 5) exists,
+equation can be reduced to easier form
+x**2 - d * y**2 = -1
 
 https://en.wikipedia.org/wiki/Pell%27s_equation#Transformations
 if u**2 - d * v**2 = -4 and {x, y} = {(u**2+3)*u/2, (u**2+1)*v/2},
@@ -53,23 +55,7 @@ def rational_quad_solve(a, b, c):
 def fib_series(x):
     return x / (1 - x - x * x)
 
-
-def solve_cubic(x):
-    """
-    solve integer solution for u in depressed cubic equation
-    x = (u**2+3)*u/2
-    reduced form 2*x = u**3 + 3 * u
-
-    intuition: 2*x  is close to  2*u**3
-    """
-    for u in range(int((2 * x)**(0.33)), int((2 * x)**(1 / 3)) * 2):
-        # print((u**2 + 3) * u - x * 2)
-        if (u**2 + 3) * u == x * 2:
-            return u
-
-    return None
-
-N = 10
+N = 15
 
 
 def main():
@@ -91,12 +77,22 @@ def main():
     fund_x, fund_y = pell.pell(5, True)
     x, y = fund_x, fund_y
 
+    # solution exists for every 2
     for i in range(N * 2):
         x, y = pell.next_solution(5, fund_x, fund_y, x, y, True)
 
-    sol = solve_cubic(x)
-    print(x, y, sol)
-    print((sol - 1) // 5)
+    # solve equation of the form 2*x = u**3 + 3 * u
+    # intuition: 2*x  is close to  2*u**3
+
+    # because of floating point inprecision,
+    # starting from (2*x)**(1/3) is closer
+    for u in range(int((2 * x)**(1 / 3)), int((2 * x)**(1 / 3)) * 2):
+        # print((u**2 + 3) * u - x * 2)
+        if (u**2 + 3) * u == x * 2:
+            break
+
+    # print(x, y, u)
+    print((u - 1) // 5)
 
 
 if __name__ == '__main__':
