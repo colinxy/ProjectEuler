@@ -8,22 +8,22 @@ S = A_F(x) = x / (1 - x - x**2)
 
 For x to be rational in equation
 S * x**2 + (S+1) * x - S = 0
+delta = (S+1)**2 + 4 * S * S = (S+1)**2 + (2*S)**2
+delta is perfect square
 
-key:
-(s + 1) , (2*s)  are sides of pythagorean triangle
-
-(p+1)**2 + (2*p)**2 = q**2
-5 * p**2 + 2 * p + 1 = q**2
-(5*p+1)**2 - 5 * q**2 = -4
+(s+1)**2 + (2*s)**2 = q**2
+5 * s**2 + 2 * s + 1 = q**2
+(5*s+1)**2 - 5 * q**2 = -4
 
 solve pell equation of the form
 u**2 - 5 * v**2 = -4
 
-because odd fundamental solution (11, 5) exists,
+because odd fundamental solution (1, 1) exists,
 equation can be reduced to easier form
 x**2 - d * y**2 = -1
 
 https://en.wikipedia.org/wiki/Pell%27s_equation#Transformations
+
 if u**2 - d * v**2 = -4 and {x, y} = {(u**2+3)*u/2, (u**2+1)*v/2},
 then x**2 - d * y**2 = -1
 """
