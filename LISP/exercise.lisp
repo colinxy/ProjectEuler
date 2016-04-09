@@ -1,10 +1,12 @@
 
-(print (cond (nil (print "cond is eager"))
-             (t "cond is lazy")))
-(print (if nil
-           (print "if is eager")
-         (progn
-           "if is lazy")))
+(defun infinite ()
+  (infinite))
+
+(cond (nil (print "cond is eager"))
+      (t (print "cond is lazy")))
+(if nil
+    (print "if is eager")
+  (print "if is lazy"))
 
 
 (defun fib (n)
