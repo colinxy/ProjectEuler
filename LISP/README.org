@@ -1,0 +1,16 @@
+
+* LISP
+
+The directory of my project euler repo will not only serve
+as my archive of lisp solutions for project euler problems,
+but also my experiment in lisp.
+
+** Resource
+
+I have massive appreciation for Mark Brown, the author of this
+blog, who have enough patience to write
+[[https://blog.lowsnr.net/category/computing/lisp/][this blog]]
+that provides great information for a new comer in lisp like myself.
+
+I have been following his series of (old) blog posts on
+*getting started with common lisp*.

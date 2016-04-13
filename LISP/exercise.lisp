@@ -1,4 +1,16 @@
 
+(defun billion-test ()
+  (let ((i 0))
+    (declare (fixnum i)
+             (optimize (speed 3) (safety 0) (debug 0))
+             (inline +))
+    (loop while (< i 1000000000) do
+         (setq i (+ i 1)))))
+
+(print "running billion test")
+(time (billion-test))
+
+
 (defun infinite ()
   (infinite))
 
