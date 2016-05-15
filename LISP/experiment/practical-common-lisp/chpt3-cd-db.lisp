@@ -66,13 +66,23 @@
 (defun select (select-fn)
   (remove-if-not select-fn *db*))
 
-(defun where (&key title artist rating (ripped nil ripped-p))
-  #'(lambda (cd)
-      (and
-       (if title (equal (getf cd :title) title) t)
-       (if artist (equal (getf cd :artist) artist) t)
-       (if rating (equal (getf cd :rating) rating) t)
-       (if ripped-p (equal (getf cd :ripped) ripped) t))))
+;; function version
+;; (defun where (&key title artist rating (ripped nil ripped-p))
+;;   #'(lambda (cd)
+;;       (and
+;;        (if title (equal (getf cd :title) title) t)
+;;        (if artist (equal (getf cd :artist) artist) t)
+;;        (if rating (equal (getf cd :rating) rating) t)
+;;        (if ripped-p (equal (getf cd :ripped) ripped) t))))
+
+;; macro version
+(defun make-comparison-expr (field value)
+  `(equal (getf cd ,field) ,value))
+(defun make-comparison-list (fields)
+  (loop while fields
+     collecting (make-comparison-expr (pop fields) (pop fields))))
+(defmacro where (&rest clauses)
+  `#'(lambda (cd) (and ,@(make-comparison-list clauses))))
 
 (select (where :artist "Dixie Chicks"))
 

@@ -5,9 +5,23 @@ The directory of my project euler repo will not only serve
 as my archive of lisp solutions for project euler problems,
 but also my experiment in lisp.
 
-** Resource
+** Resources
 
-I have massive appreciation for Mark Brown, the author of this
+*** Practical Common Lisp
+
+Absolute classic.
+
+*** 99 Lisp Problems
+
+[[http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html][99 Lisp Problems]]
+
+Solutions
+ - [[http://www.informatimago.com/develop/lisp/l99/][here]]
+ - [[http://batsov.com/lisp-problems/][and here (partial)]]
+
+*** Blogs
+
+I have massive respect for Mark Brown, the author of this
 blog, who have enough patience to write
 [[https://blog.lowsnr.net/category/computing/lisp/][this blog]]
 that provides great information for a new comer in lisp like myself.
