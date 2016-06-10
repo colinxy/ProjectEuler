@@ -256,12 +256,12 @@ size_t Mathutil::prime_under(vector<int> &primes, size_t n) {
     size_t size = 0;
     vector<bool> isPrime(n, true);
 
-    for (int prime = 2; prime < n; ++prime) {
+    for (uint prime = 2; prime < n; ++prime) {
         if (isPrime[prime]) {
             primes.push_back(prime);
             ++size;
 
-            for (int64_t next = (int64_t)prime * prime; next < n; next += prime)
+            for (uint64_t next = (uint64_t)prime * prime; next < n; next += prime)
                 isPrime[next] = false;
         }
     }

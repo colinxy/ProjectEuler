@@ -52,7 +52,9 @@ console.log(solutions.length);
 console.log(solutions.reduce(addThird, 0));
 
 console.log(numbers.size);
-console.log(numbers.reduce(function(a, b) {
+// console.log(numbers);
+// console.log(Array.from(numbers));
+console.log(Array.from(numbers).reduce(function(a, b) {
     return a + b;
 }));
 

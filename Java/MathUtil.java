@@ -364,7 +364,11 @@ public class MathUtil {
         long getAllFactorsTime = System.nanoTime();
         System.out.println("getAllFactors(" + ceiling + ")");
         ArrayList<ArrayList<Integer>> factors = getAllFactors(ceiling);
-        System.out.println(factors.get(1000000));
+        System.out.println(factors.get(1000000-1));
         System.out.println("All factors acquired by " + (System.nanoTime()-getAllFactorsTime) / 1000000000.0 + " seconds");
+    }
+
+    public static void main(String[] args) {
+        testMathUtil();
     }
 }
