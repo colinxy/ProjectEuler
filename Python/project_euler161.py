@@ -26,7 +26,7 @@ class Tiling2:
 
     def __init__(self, n):
         if n % 3 != 0:
-            return
+            raise ArithmeticError("No Solution")
         self.n = n
         self.A = [0] * (n + 1)  # after putting a type A block
         self.B = [0] * (n + 1)  # after putting a type B block
@@ -119,7 +119,7 @@ def fill_col(state):
         after[index+1] = 2
         after[index+2] = 1
         after[index+3] = 1
-        after_states.extend(fill_col(tuple(state)))
+        after_states.extend(fill_col(tuple(after)))
 
     # fill with type B, 2 to the left, 2 orientations
     # orient up/down
@@ -157,8 +157,8 @@ class Tiling_n:
 
         for i in range(self.cols):
             self._solve_col()
-            print(self.curr_col_cache)
-            print(self.state_cache)
+            # print(self.curr_col_cache)
+            # print(self.state_cache)
         return self.curr_col_cache[empty_state]
 
     def _solve_col(self):
@@ -186,9 +186,9 @@ class Tiling_n:
 
 def main():
     print(Tiling2(9).solve())
-    print(Tiling2(6).solve())
+    print(Tiling2(3).solve())
 
-    print(Tiling_n(6, 2).solve())
+    print(Tiling_n(9, 12).solve())
 
 
 if __name__ == '__main__':
