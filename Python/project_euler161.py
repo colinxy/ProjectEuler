@@ -61,11 +61,6 @@ def fill_col(state):
     index = state.index(0)
     after_states = []
 
-    # try:
-    #     index = state.index(0)
-    # except ValueError:
-    #     return [state]
-
     # fill with type A
     # XXX
     after = list(state)
@@ -188,7 +183,10 @@ def main():
     # print(Tiling2(9).solve())
     # print(Tiling2(3).solve())
 
-    print(Tiling_n(9, 12).solve())
+    prob = Tiling_n(9, 12)
+    print(prob.solve())
+    # print(len(prob.state_cache))
+    # print(max(len(s) for s in prob.state_cache))
 
 
 if __name__ == '__main__':
