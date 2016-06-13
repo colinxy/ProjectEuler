@@ -1,5 +1,4 @@
 import random
-from fractions import gcd
 from functools import reduce
 from itertools import combinations
 from operator import mul
@@ -24,6 +23,12 @@ def product(iterable, start=1):
 
 def product_mod(iterable, mod, start=1):
     return reduce(lambda a, b: a * b % mod, iterable, start)
+
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
 
 
 def nCr(m, n):

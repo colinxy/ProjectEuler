@@ -34,3 +34,7 @@ def solve_cubic_depressed(p, q):
     t1, t2 = t_cubed1**(1 / 3), t_cubed2**(1 / 3)
     # TODO : method still erroneous
     return t1 - p / (3 * t1), t2 - p / (3 * t2)
+
+
+def newton():
+    pass
