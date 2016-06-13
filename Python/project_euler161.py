@@ -185,8 +185,8 @@ class Tiling_n:
 
 
 def main():
-    print(Tiling2(9).solve())
-    print(Tiling2(3).solve())
+    # print(Tiling2(9).solve())
+    # print(Tiling2(3).solve())
 
     print(Tiling_n(9, 12).solve())
 
