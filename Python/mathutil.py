@@ -1,10 +1,12 @@
+
+from __future__ import division
+
 import random
 from functools import reduce
 from itertools import combinations
 from operator import mul
 from collections import defaultdict
 import heapq
-import numpy as np
 
 __author__ = 'yxy'
 
@@ -70,14 +72,45 @@ def is_prime(n):
 
 
 def is_prob_prime(p, n=20):
+    """Fermat primality test"""
     return all(pow(random.randint(1, p - 1), p - 1, p) == 1
                for _ in range(n))
 
 
+def _try_composite(p, wit, d, r):
+    """return true if definitely composite"""
+    if pow(wit, d, p) == 1:
+        return False
+    return not any(pow(wit, 2**i * d, p) == p-1 for i in range(r))
+
+_SMALL_PRIMES = [
+    2, 3, 5, 7, 11, 13, 17, 19, 23,
+    29, 31, 37, 41, 43, 47, 53, 59,
+    # 61, 67, 71, 73, 79, 83, 89, 97
+]
+
+
 def miller_rabin(p):
-    """correct for n < 3,825,123,056,546,413,051"""
-    return all(pow(witness, p - 1, p) == 1
-               for witness in [2, 3, 5, 7, 11, 13, 17, 19, 23])
+    """correct up to 341 550 071 728 321
+    p is composite if any of the 2 following test fails
+    witness ** (2**r * d) % p == 1, or
+    witness ** (2**r * d) % p == p-1
+    """
+    if p <= 3:
+        return p >= 2
+
+    if p in _SMALL_PRIMES:
+        return True
+    if any((p % prime) == 0 for prime in _SMALL_PRIMES):
+        return False
+
+    d, r = p-1, 0
+    while not d & 1:
+        d >>= 1
+        r += 1
+
+    return not any(_try_composite(p, wit, d, r)
+                   for wit in [2, 3, 5, 7, 11, 13, 17])
 
 
 def prime_factorization(n):
@@ -133,6 +166,8 @@ def prime_under(ceiling):
 
 
 def is_prime_array(ceiling):
+    import numpy as np
+
     is_prime_arr = np.ones(ceiling, dtype=np.bool)
     is_prime_arr[0], is_prime_arr[1] = False, False
     for (i, isPrime) in enumerate(is_prime_arr):
@@ -142,6 +177,7 @@ def is_prime_array(ceiling):
     return is_prime_arr
 
 
+# TODO : delete this, basically useless
 def prime_factors_under_lazy_heap(ceiling):
     update = []  # a list of tuples, (num, p), num->next number that factor p
 
@@ -161,6 +197,7 @@ def prime_factors_under_lazy_heap(ceiling):
             yield factor
 
 
+# TODO : delete this, basically useless
 def prime_factors_under_lazy_dict(ceiling):
     update = defaultdict(list)
 
@@ -225,29 +262,3 @@ def prime_factorization_under(ceiling):
 #             the_factorization.extend(fac)
 #
 #     return the_factorization
-
-
-# def permutation(characters):
-#     """
-#     *DEPRECATED*, use itertools.permutations instead
-#
-#     input: a list of characters, repeat allowed, counted only once
-#     output: all possible permutations of the given list
-#     """
-#     if len(characters) == 1:
-#         return [characters]
-
-#     result = []
-#     for i in range(len(characters)):
-#         result.extend([j + [characters[i]] for j in permutation(characters[:i] + characters[i+1:])])
-
-#     return result
-
-
-# def permutation_formatted(numbers):
-#     result = permutation(numbers)
-#     return sorted(set([tuple(i) for i in result]))
-
-
-# def gcd(x, y):
-#     return x if y == 0 else gcd(y, x % y)
