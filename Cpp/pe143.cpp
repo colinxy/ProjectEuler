@@ -46,12 +46,14 @@ void all_pairs(vector<Pair> &pairs, int bound) {
 
 
 int main() {
+    const int UPPER_BOUND = 120000;
+
     vector<Pair> pairs;
-    all_pairs(pairs, 120000);
-    std::cout << "total: " << pairs.size() << std::endl;
+    all_pairs(pairs, UPPER_BOUND);
+    // std::cout << "total number of pairs: " << pairs.size() << std::endl;
 
     unordered_set<Pair> lookup_set(pairs.cbegin(), pairs.cend());
-    unordered_set<int> distinct_pqr;
+    unordered_set<int> distinct_pqr_sums;
 
     std::size_t size = pairs.size();
     for (std::size_t i = 0; i < size; ++i) {
@@ -62,15 +64,19 @@ int main() {
                 break;
             if (lookup_set.find(Pair(q, pairs[j].q)) != lookup_set.end()) {
                 long sum = p + q + pairs[j].q;
-                std::cout << sum << std::endl;
-                distinct_pqr.insert(sum);
+                // std::cout << p << ' ' << q << ' ' << pairs[j].q << ' ' <<
+                //     sum << std::endl;
+                if (sum < UPPER_BOUND)
+                    distinct_pqr_sums.insert(sum);
             }
         }
     }
 
+    // std::cout << distinct_pqr_sums.size() << std::endl;
+
     long distinct_sum = 0;
-    for (auto iter = distinct_pqr.cbegin();
-         iter != distinct_pqr.cend(); ++iter) {
+    for (unordered_set<int>::const_iterator iter = distinct_pqr_sums.cbegin();
+         iter != distinct_pqr_sums.cend(); ++iter) {
         distinct_sum += *iter;
     }
 
