@@ -38,7 +38,6 @@ def is_square(n):
 
 
 def parametrized():
-    # actually a bit slower than unparametrized version
     prog_sq = []
     for b in range(2, CBRT_N):
         for a in range(1, b):

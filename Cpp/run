@@ -7,7 +7,7 @@ executable="${filename%.*}".out
 
 # prevent possible overwrite
 [ -f "$executable" ] &&
-    printf "\033[1;31m*** Naming Conflict ***\033[1m\n" && exit 1
+    printf "\033[1;31m*** Naming Conflict ***\033[1;00m\n" && exit 1
 
 # make sure mathutil is up to date
 LIBRARY="mathutil.o"
@@ -20,7 +20,7 @@ then
     make -s
     # if library does not make successfully
     if [ $? -ne 0 ]; then
-        printf "\033[1;31m*** FAIL TO COMPILE LIBRARY ***\033[1m\n"
+        printf "\033[1;31m*** FAIL TO COMPILE LIBRARY ***\033[1;00m\n"
         exit 1
     fi
     g++ -o "$executable" "$filename" $LIBRARY -std=c++11 -O2
@@ -29,7 +29,7 @@ else
 fi
 
 if [ $? -ne 0 ]; then
-    printf "\033[1;31m*** FAIL TO COMPILE %s ***\033[1m\n" "$filename"
+    printf "\033[1;31m*** FAIL TO COMPILE %s ***\033[1;00m\n" "$filename"
     exit 1
 fi
 
