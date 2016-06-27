@@ -33,6 +33,18 @@ def gcd(a, b):
     return a
 
 
+def extended_gcd(n, p):
+    """return (a, b) s.t. a*n + b*p == 1
+    precondition: gcd(n, p) == 1
+    """
+    a, b = (1, 0), (0, 1)
+    while p != 1:               # gcd(n, p) == 1
+        div = n // p
+        a, b = b, (a[0] - div*b[0], a[1] - div*b[1])
+        n, p = p, n - p*div
+    return b
+
+
 def nCr(m, n):
     """Choose n out of m"""
     if n > m / 2:

@@ -6,8 +6,8 @@ filename=$(basename "$1")
 executable="${filename%.*}".out
 
 # prevent possible overwrite
-[ -f "$executable" ] &&
-    printf "\033[1;31m*** Naming Conflict ***\033[1;00m\n" && exit 1
+# [ -f "$executable" ] &&
+#     printf "\033[1;31m*** Naming Conflict ***\033[1;00m\n" && exit 1
 
 # make sure mathutil is up to date
 LIBRARY="mathutil.o"
