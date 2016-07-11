@@ -4,7 +4,7 @@ from __future__ import division
 import random
 from functools import reduce
 from itertools import combinations
-from operator import mul
+import operator
 from collections import defaultdict
 import heapq
 
@@ -20,7 +20,7 @@ __author__ = 'yxy'
 
 
 def product(iterable, start=1):
-    return reduce(mul, iterable, start)
+    return reduce(operator.mul, iterable, start)
 
 
 def product_mod(iterable, mod, start=1):
@@ -34,15 +34,14 @@ def gcd(a, b):
 
 
 def extended_gcd(n, p):
-    """return (a, b) s.t. a*n + b*p == 1
-    precondition: gcd(n, p) == 1
+    """return (a, b) s.t. a*n + b*p == gcd(n, p)
     """
-    a, b = (1, 0), (0, 1)
-    while p != 1:               # gcd(n, p) == 1
+    a_, b_ = (1, 0), (0, 1)
+    while p != 0:
         div = n // p
-        a, b = b, (a[0] - div*b[0], a[1] - div*b[1])
+        a_, b_ = b_, (a_[0] - div*b_[0], a_[1] - div*b_[1])
         n, p = p, n - p*div
-    return b
+    return a_                    # tuple
 
 
 def nCr(m, n):
@@ -259,18 +258,3 @@ def prime_factorization_under(ceiling):
                     factor[-1][fac] += 1
                     number //= fac
             yield factor.pop()
-
-
-# def factorization(n, start=2):
-#     if start * start > n:
-#         return [[n]]
-
-#     the_factorization = [[n]]
-#     for i in range(start, int(n ** 0.5) + 1):
-#         if n % i == 0:
-#             fac = factorization(n // i, i)
-#             for each in fac:
-#                 each.append(i)
-#             the_factorization.extend(fac)
-#
-#     return the_factorization

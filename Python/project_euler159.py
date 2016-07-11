@@ -7,7 +7,7 @@ N = 10**6
 
 
 def digit_root(n):
-    return n - 9 * ((n-1)//9)
+    return 1 + (n-1) % 9
     # dr = sum(map(int, str(n))) % 9
     # return 9 if dr == 0 else dr
 
@@ -33,6 +33,7 @@ def max_digital_root_sum(num):
             if dr_sum > max_sum:
                 max_sum = dr_sum
 
+    # fill cache
     max_digit_roo_sum_cache.append(max_sum)
     return max_sum
 
