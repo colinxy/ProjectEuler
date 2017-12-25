@@ -7,30 +7,35 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+CXX=${CXX:-g++}
+CXXFLAGS=${CXXFLAGS:-'-std=c++11 -O2 -Wall -Wextra'}
+
 filename=$(basename "$1")
-executable="${filename%.*}".out
+executable="${filename%.*}".out  # $executable is never empty
 
 # prevent possible overwrite
 # [ -f "$executable" ] &&
 #     printf "\033[1;31m*** Naming Conflict ***\033[1;00m\n" && exit 1
 
+
 # make sure mathutil is up to date
 LIBRARY="mathutil.o"
 LIB_HDR="mathutil.h"
 
-
 # check whether source file need LIBRARY
-if grep -E "^#include\s*\"$LIB_HDR\"" "$filename" > /dev/null
-then
-    if make -s; then
+if grep -E "^#include\s*\"$LIB_HDR\"" "$filename" >/dev/null; then
+    if ! make -s; then
         # if library does not make successfully
         printf "\033[1;31m*** FAIL TO COMPILE LIBRARY ***\033[1;00m\n"
         exit 2
     fi
-    g++ -o "$executable" "$filename" $LIBRARY -std=c++11 -O2
 else
-    g++ -o "$executable" "$filename" -std=c++11 -O2
+    LIBRARY=
 fi
+
+
+echo $CXX -o "$executable" "$filename" $LIBRARY $CXXFLAGS
+$CXX -o "$executable" "$filename" $LIBRARY $CXXFLAGS
 
 if [ $? -ne 0 ]; then
     printf "\033[1;31m*** FAIL TO COMPILE %s ***\033[1;00m\n" "$filename"
