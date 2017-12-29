@@ -157,7 +157,7 @@ uint64_t Mathutil::nCr_s(unsigned int n, unsigned int k) {
     if (k > n / 2) k = n - k;
 
     uint64_t result = 1;
-    for (int i = 1; i <= k; ++i) {
+    for (unsigned int i = 1; i <= k; ++i) {
         uint64_t g = gcd(result, i);
         result /= g;
         uint64_t t = n-- / (i / g);
@@ -197,7 +197,7 @@ bool Mathutil::is_prime(const size_t n) {
  * a^(2^r*d) % n == -1   0 <= r <= s-1
  */
 
-bool witness(size_t n, size_t a, size_t s, size_t d) {
+bool witness(size_t /*n*/, size_t /*a*/, size_t /*s*/, size_t /*d*/) {
     // size_t rem = Mathutil::pow_s(a, d, n);
     // if (rem == 1) return true;  // probable prime
 
@@ -236,8 +236,8 @@ bool Mathutil::miller_rabin(size_t n) {
         ++s;
     }
 
-    array<size_t, 12> small_primes ({2, 3, 5, 7, 11, 13, 17, 19,
-                23, 29, 31, 37});
+    array<size_t, 12> small_primes {{
+            2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37}};
 
     for (auto p : small_primes) {
         if (!witness(n, p, s, d))
@@ -256,7 +256,7 @@ size_t Mathutil::prime_under(vector<int> &primes, size_t n) {
     size_t size = 0;
     vector<bool> isPrime(n, true);
 
-    for (uint prime = 2; prime < n; ++prime) {
+    for (unsigned int prime = 2; prime < n; ++prime) {
         if (isPrime[prime]) {
             primes.push_back(prime);
             ++size;

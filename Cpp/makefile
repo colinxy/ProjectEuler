@@ -1,12 +1,9 @@
-CXX = g++
-
-CPPFLAGS = -std=c++11 -O2 -Wall -Wextra -Werror=return-type
 OBJ = mathutil.o
 SRC = mathutil.cpp
 HDR = mathutil.h
 
 $(OBJ) : $(SRC) $(HDR)
-	$(CXX) -c -o $(OBJ) $(SRC) $(CPPFLAGS)
+	$(CXX) -c -o $(OBJ) $(SRC) $(CXXFLAGS)
 
 clean :
-	rm $(OBJ)
+	-rm $(OBJ)

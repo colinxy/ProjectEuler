@@ -8,7 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 CXX=${CXX:-g++}
-CXXFLAGS=${CXXFLAGS:-'-std=c++11 -O2 -Wall -Wextra'}
+CXXFLAGS=${CXXFLAGS:-'-std=c++11 -O2 -Wall -Wextra -Werror=return-type'}
 
 filename=$(basename "$1")
 executable="${filename%.*}".out  # $executable is never empty
@@ -24,7 +24,8 @@ LIB_HDR="mathutil.h"
 
 # check whether source file need LIBRARY
 if grep -E "^#include\s*\"$LIB_HDR\"" "$filename" >/dev/null; then
-    if ! make -s; then
+    make clean
+    if ! make CXX="$CXX" CXXFLAGS="$CXXFLAGS"; then
         # if library does not make successfully
         printf "\033[1;31m*** FAIL TO COMPILE LIBRARY ***\033[1;00m\n"
         exit 2

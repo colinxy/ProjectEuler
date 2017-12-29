@@ -8,8 +8,8 @@ from itertools import product
 
 N = 18
 cache_split = {1: [[1]]}        # Dict[int, List[List[int]]]
-cache_parallel = {1: {1}}       # Dict[int, Set[int]]
-cache_serial = {1: {1}}         # Dict[int, Set[int]]
+cache_parallel = {}             # Dict[int, Set[int]]
+cache_serial = {}               # Dict[int, Set[int]]
 
 
 def cached(cache):
@@ -98,6 +98,7 @@ def main():
     # print(d(2))
     # print(d(3))
 
+    # pypy 1.5min, slow
     print(d(N))
 
 
