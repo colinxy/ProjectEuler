@@ -50,6 +50,9 @@ cleanup() {
 }
 trap cleanup INT
 
+# override like TIME='/usr/bin/time --verbose'
+TIME=${TIME:-time}
+
 echo "running $executable"
-time ./"$executable"
+$TIME ./"$executable"
 rm "$executable"

@@ -9,7 +9,7 @@ from itertools import product
 N = 18
 cache_split = {1: [[1]]}        # Dict[int, List[List[int]]]
 cache_parallel = {}             # Dict[int, Set[int]]
-cache_serial = {}               # Dict[int, Set[int]]
+cache_series = {}               # Dict[int, Set[int]]
 
 
 def cached(cache):
@@ -51,15 +51,15 @@ def parallel(n):
             # special case, not splitting at all
             res.add(splitted[0])
             continue
-        each_series = [serial(i) for i in splitted]
+        each_series = [series(i) for i in splitted]
         for each in product(*each_series):
             res.add(sum(each))
 
     return res
 
 
-@cached(cache_serial)
-def serial(n):
+@cached(cache_series)
+def series(n):
     if n == 1:
         return {1}
 
@@ -80,14 +80,14 @@ def serial(n):
 
 def d_exact(n):
     # using exactly n capacitors
-    return len(parallel(n) | serial(n))
+    return len(parallel(n) | series(n))
 
 
 def d(n):
     # using up to n capacitors
     values = set()
     for i in range(1, n+1):
-        exactly = parallel(i) | serial(i)
+        exactly = parallel(i) | series(i)
         # print(exactly)
         values |= exactly
     return len(values)
