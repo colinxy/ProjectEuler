@@ -82,7 +82,7 @@ int d(int n) {
 
             for (const auto lhs : cache[n1]) {
                 for (const auto rhs : cache[n2]) {
-                    // symmetry:
+                    // symmetry (not rigorous illustration)
                     // pairs of capacitors inverse to each other (except for 1)
                     //
                     // a/b, c/d in series:     (a/b + c/d)
@@ -119,16 +119,17 @@ int d(int n) {
     // }
 
     // numerator and denominator bounded by fibbonacci(n)
-    // use loose bound 1<<13
-    vector<bool> bitmap(1<<26);
+    // use loose bound 1<<14
+    const int BOUND_BITS = 14;
+    vector<bool> bitmap(1<<(BOUND_BITS*2));
     int distinct = 0;
     for (int i = 1; i <= n; i++) {
         for (auto f : cache[i]) {
             int div = Frac::gcd(f.numer, f.denom);
             f.numer /= div;
             f.denom /= div;
-            if (!bitmap[(f.numer<<13) + f.denom]) {
-                bitmap[(f.numer<<13) + f.denom] = true;
+            if (!bitmap[(f.numer<<BOUND_BITS) + f.denom]) {
+                bitmap[(f.numer<<BOUND_BITS) + f.denom] = true;
                 distinct++;
             }
         }

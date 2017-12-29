@@ -3,7 +3,7 @@ from __future__ import division
 
 import random
 from functools import reduce
-from itertools import combinations
+from itertools import combinations, tee, islice
 import operator
 from collections import defaultdict
 import heapq
@@ -25,6 +25,24 @@ def product(iterable, start=1):
 
 def product_mod(iterable, mod, start=1):
     return reduce(lambda a, b: a * b % mod, iterable, start)
+
+
+def fib_lazy():
+    """Lazily generate fib sequence for fun and profit
+    http://joelgrus.com/2015/07/07/haskell-style-fibonacci-in-python/
+    Code is made python2/3 compatible
+    """
+    from operator import add
+    try:
+        from itertools import imap as map
+    except ImportError:
+        pass
+
+    yield 1
+    yield 1
+    fibs1, fibs2 = tee(fib_lazy())
+    for f in map(add, fibs1, islice(fibs2, 1, None)):
+        yield f
 
 
 def gcd(a, b):
