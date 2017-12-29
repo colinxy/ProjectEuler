@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <set>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -11,14 +12,15 @@ const int N = 18;
 
 
 struct Frac {
-    int numer;
-    int denom;
+    int32_t numer;
+    int32_t denom;
 
     // Frac() : numer(0), denom(1) {}
-    Frac(int numer, int denom=1) {
-        int div = gcd(numer, denom);
-        this->numer = numer / div;
-        this->denom = denom / div;
+    Frac(int numer, int denom=1) : numer(numer), denom(denom) {
+        // no longer guarantee minimal representation
+        // int div = gcd(numer, denom);
+        // this->numer = numer / div;
+        // this->denom = denom / div;
     }
 
     static int gcd(int x, int y) {
@@ -31,10 +33,10 @@ struct Frac {
     }
 
     bool operator==(const Frac &other) const {
-        return numer == other.numer && denom == other.denom;
+        return numer*other.denom == other.numer*denom;
     }
     bool operator<(const Frac &other) const {
-        return (double)numer/denom < (double)other.numer/other.denom;
+        return numer*other.denom < other.numer*denom;
     }
     Frac operator+(const Frac &other) const {
         return Frac(numer*other.denom+denom*other.numer, denom*other.denom);
@@ -56,7 +58,7 @@ namespace std {
 }
 
 
-unordered_set<Frac> cache[N+1] = {
+vector<Frac> cache[N+1] = {
     {},
     {{1, 1}},
 };
@@ -89,21 +91,25 @@ int d(int n) {
                     // use symmetry by storing only values >= 1
                     Frac comb1 = parallel(lhs, rhs);
                     comb1.atleast1();
-                    cache[i].insert(comb1);
+                    cache[i].push_back(comb1);
                     Frac comb2 = series(lhs, rhs);
                     comb2.atleast1();
-                    cache[i].insert(comb2);
+                    cache[i].push_back(comb2);
                     Frac comb3 = parallel(
                         Frac(lhs.denom, lhs.numer), rhs);
                     comb3.atleast1();
-                    cache[i].insert(comb3);
+                    cache[i].push_back(comb3);
                     Frac comb4 = series(
                         Frac(lhs.denom, lhs.numer), rhs);
                     comb4.atleast1();
-                    cache[i].insert(comb4);
+                    cache[i].push_back(comb4);
                 }
             }
         }
+
+        sort(cache[i].begin(), cache[i].end());
+        auto end = unique(cache[i].begin(), cache[i].end());
+        cache[i].erase(end, cache[i].end());
     }
 
     // unordered_set<Frac> distinct;
@@ -117,7 +123,10 @@ int d(int n) {
     vector<bool> bitmap(1<<26);
     int distinct = 0;
     for (int i = 1; i <= n; i++) {
-        for (const auto f : cache[i]) {
+        for (auto f : cache[i]) {
+            int div = Frac::gcd(f.numer, f.denom);
+            f.numer /= div;
+            f.denom /= div;
             if (!bitmap[(f.numer<<13) + f.denom]) {
                 bitmap[(f.numer<<13) + f.denom] = true;
                 distinct++;
@@ -129,7 +138,7 @@ int d(int n) {
 }
 
 int main() {
-    // for (int i = 1; i <= 8; i++)
+    // for (int i = 1; i <= 4; i++)
     //     cout << d(i) << endl;
 
     cout << d(N) << endl;
