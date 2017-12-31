@@ -3,10 +3,8 @@ from __future__ import division
 
 import random
 from functools import reduce
-from itertools import combinations, tee, islice
+from itertools import combinations
 import operator
-from collections import defaultdict
-import heapq
 
 __author__ = 'yxy'
 
@@ -33,6 +31,7 @@ def fib_lazy():
     Code is made python2/3 compatible
     """
     from operator import add
+    from itertools import tee, islice
     try:
         from itertools import imap as map
     except ImportError:
@@ -112,6 +111,7 @@ def _try_composite(p, wit, d, r):
         return False
     return not any(pow(wit, 2**i * d, p) == p-1 for i in range(r))
 
+
 _SMALL_PRIMES = [
     2, 3, 5, 7, 11, 13, 17, 19, 23,
     29, 31, 37, 41, 43, 47, 53, 59,
@@ -185,8 +185,8 @@ def prime_under(ceiling):
     primes = []
     primality = [True] * ceiling
     primality[0], primality[1] = False, False
-    for (i, isPrime) in enumerate(primality):
-        if isPrime:
+    for (i, is_prime) in enumerate(primality):
+        if is_prime:
             primes.append(i)
             for j in range(i * i, ceiling, i):
                 primality[j] = False
@@ -199,59 +199,19 @@ def is_prime_array(ceiling):
 
     is_prime_arr = np.ones(ceiling, dtype=np.bool)
     is_prime_arr[0], is_prime_arr[1] = False, False
-    for (i, isPrime) in enumerate(is_prime_arr):
-        if isPrime:
+    for (i, is_prime) in enumerate(is_prime_arr):
+        if is_prime:
             for j in range(i * i, ceiling, i):
                 is_prime_arr[j] = False
     return is_prime_arr
 
 
-# TODO : delete this, basically useless
-def prime_factors_under_lazy_heap(ceiling):
-    update = []  # a list of tuples, (num, p), num->next number that factor p
-
-    heapq.heappush(update, (4, 2))
-    yield [2]
-    for i in range(3, ceiling):
-        # i <= update[0][0]
-        if update[0][0] > i:  # then i is prime
-            heapq.heappush(update, (2 * i, i))
-            yield [i]
-        else:  # i is not prime, i == update[0][0]
-            factor = []
-            while update[0][0] == i:
-                next_fac, p = update[0]
-                factor.append(p)
-                heapq.heapreplace(update, (next_fac + p, p))
-            yield factor
-
-
-# TODO : delete this, basically useless
-def prime_factors_under_lazy_dict(ceiling):
-    update = defaultdict(list)
-
-    update[4] = [2]
-    yield [2]
-    for i in range(3, ceiling):
-        if i not in update:  # then i is prime
-            update[2 * i].append(i)
-            yield [i]
-        else:  # i is not prime
-            factor = update.pop(i)
-            yield factor
-            for p in factor:
-                update[i + p].append(p)
-
-
 def prime_factors_under(ceiling):
-    primality = [True] * ceiling
     factor = [[] for _ in range(ceiling)]
     for i in range(2, ceiling):
-        if primality[i]:
+        if not factor[-1]:
             factor[-1].append(i)
             yield factor.pop()
-            for j in range(i * i, ceiling, i):
-                primality[j] = False
             for j in range(-i, -len(factor), -i):
                 factor[j].append(i)
         else:
@@ -259,14 +219,11 @@ def prime_factors_under(ceiling):
 
 
 def prime_factorization_under(ceiling):
-    primality = [True] * ceiling
     factor = [{} for _ in range(ceiling)]
     for i in range(2, ceiling):
-        if primality[i]:
+        if not factor[-1]:
             factor[-1][i] = 1
             yield factor.pop()
-            for j in range(i * i, ceiling, i):
-                primality[j] = False
             for j in range(-i, -len(factor), -i):
                 factor[j][i] = 1
         else:
