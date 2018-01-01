@@ -12,9 +12,12 @@ __author__ = 'yxy'
 #            'product_mod', 'to_base',
 #            'is_prime', 'is_prob_prime',
 #            'prime_under', 'prime_factorization',
-#            'factors', 'prime_factors_under',
-#            'prime_factors_under_lazy_heap',
-#            'prime_factors_under_lazy_dict']
+#            'factors', 'prime_factors_under']
+
+try:
+    range = xrange
+except NameError:
+    pass
 
 
 def product(iterable, start=1):
@@ -112,13 +115,6 @@ def _try_composite(p, wit, d, r):
     return not any(pow(wit, 2**i * d, p) == p-1 for i in range(r))
 
 
-_SMALL_PRIMES = [
-    2, 3, 5, 7, 11, 13, 17, 19, 23,
-    29, 31, 37, 41, 43, 47, 53, 59,
-    # 61, 67, 71, 73, 79, 83, 89, 97
-]
-
-
 def miller_rabin(p):
     """correct up to 341 550 071 728 321
     p is composite if any of the 2 following test fails
@@ -127,6 +123,12 @@ def miller_rabin(p):
     """
     if p <= 3:
         return p >= 2
+
+    _SMALL_PRIMES = [
+        2, 3, 5, 7, 11, 13, 17, 19, 23,
+        29, 31, 37, 41, 43, 47, 53, 59,
+        # 61, 67, 71, 73, 79, 83, 89, 97
+    ]
 
     if p in _SMALL_PRIMES:
         return True
@@ -182,13 +184,15 @@ def factors(n):
 
 
 def prime_under(ceiling):
-    primes = []
+    primes = [2]
     primality = [True] * ceiling
     primality[0], primality[1] = False, False
-    for (i, is_prime) in enumerate(primality):
-        if is_prime:
+    for i in range(4, ceiling, 2):
+        primality[i] = False
+    for i in range(3, ceiling, 2):
+        if primality[i]:
             primes.append(i)
-            for j in range(i * i, ceiling, i):
+            for j in range(i * i, ceiling, i * 2):
                 primality[j] = False
 
     return primes
@@ -199,9 +203,11 @@ def is_prime_array(ceiling):
 
     is_prime_arr = np.ones(ceiling, dtype=np.bool)
     is_prime_arr[0], is_prime_arr[1] = False, False
-    for (i, is_prime) in enumerate(is_prime_arr):
-        if is_prime:
-            for j in range(i * i, ceiling, i):
+    for i in range(4, ceiling, 2):
+        is_prime_arr[i] = False
+    for i in range(3, ceiling, 2):
+        if is_prime_arr[i]:
+            for j in range(i * i, ceiling, i * 2):
                 is_prime_arr[j] = False
     return is_prime_arr
 
