@@ -34,20 +34,9 @@ size_t Mathutil::pow(size_t base, size_t exp) {
     while (exp) {
         if (exp & 1) result *= base;
         exp >>= 1;
-        result *= result;
+        base *= base;
     }
     return result;
-
-    /*
-    if (exp == 0)
-        return 1;
-
-    if (exp % 2 == 0)
-        return pow(base*base, exp/2);
-
-    else
-        return pow(base*base, exp/2) * base;
-    */
 }
 
 
@@ -57,7 +46,7 @@ size_t Mathutil::pow(size_t base, size_t exp, size_t mod) {
     while (exp) {
         if (exp & 1) result = result * base % mod;
         exp >>= 1;
-        result = result * result % mod;
+        base = base * base % mod;
     }
     return result;
 }
@@ -82,7 +71,7 @@ size_t Mathutil::pow_s(size_t base, size_t exp, size_t mod) {
         if (exp & 1) {
             if (result > numeric_limits<size_t>::max() / base) {
                 // throw overflow_error("overflow in computing modular exponentiation");
-                cout << "overflow for exponent algorithm, using product algorithm" << endl;
+                cerr << "overflow for exponent algorithm, using product algorithm" << endl;
                 return pow_mod(base, exp, mod);
             }
             result = result * base % mod;
@@ -90,11 +79,12 @@ size_t Mathutil::pow_s(size_t base, size_t exp, size_t mod) {
 
         exp >>= 1;
 
-        if (result > numeric_limits<size_t>::max() / result) {
+        if (base > numeric_limits<size_t>::max() / base) {
             // throw overflow_error("overflow in computing modular exponentiation");
+            cerr << "overflow for exponent algorithm, using product algorithm" << endl;
             return pow_mod(base, exp, mod);
         }
-        result = result * result % mod;
+        base = base * base % mod;
     }
     return result;
 }
