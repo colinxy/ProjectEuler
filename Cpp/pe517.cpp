@@ -4,9 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <unordered_map>
 #include "mathutil.h"
-#include "double.h"
 
 using namespace std;
 
@@ -14,47 +12,32 @@ using Mathutil::is_prime;
 
 const int MOD = 1000000007;
 
-double a;
-// int cache[11000000];
-unordered_map<Double, int> cache_map;
-
-
-int64_t g(double x) {
-    if (cache_map[x])
-        return cache_map[x];
-
+int64_t g(double x, double a) {
     if (x < a)
-        cache_map[x] = 1;
-    else
-        cache_map[x] = (g(x-1) + g(x-a)) % MOD;
+        return 1;
 
-    return cache_map[x];
+    return (g(x-1, a) + g(x-a, a)) % MOD;
 }
 
-/*
-int64_t g(int x) {
-    if (cache[x] > 0) return cache[x];
-
-    if (x < a) {
-        cache[x] = 1;
-        return 1;
-    }
-
-    cache[x] = ((g(x-1) + g(x - a)) % MOD);
-
-    return cache[x];
-}*/
-
 int64_t G(int x) {
-    a = sqrt(x);
+    double a = sqrt(x);
 
-    // memset(cache, 0, x * sizeof(int));
+    return g(x, a);
+}
 
-    return g(x);
+int64_t G_fast(int x) {
+    // ignore cases where x is perfect square
+
+    // pascal's triangle
+    // one side -1, the other side -a
+    double a = sqrt(x);
+    int a_floor = floor(a);
+
+    return 0;
 }
 
 int main() {
-    // cout << G(10000) << endl;
+    cout << G(90) << endl;
 
     vector<int> primes;
     for (int i = 10000000; i < 10010000; ++i) {
@@ -62,7 +45,8 @@ int main() {
             primes.push_back(i);
         }
     }
-    // cout << primes.size() << endl;
+    cout << primes.size() << endl;
+    // cout << G(primes[0]) << endl;
 
     return 0;
 }
