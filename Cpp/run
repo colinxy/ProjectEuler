@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # run a specific cpp file and time it
 
@@ -37,7 +37,6 @@ fi
 
 echo $CXX -o "$executable" "$filename" $LIBRARY $CXXFLAGS
 $CXX -o "$executable" "$filename" $LIBRARY $CXXFLAGS
-
 if [ $? -ne 0 ]; then
     printf "\033[1;31m*** FAIL TO COMPILE %s ***\033[1;00m\n" "$filename"
     exit 2
@@ -51,9 +50,9 @@ cleanup() {
 trap cleanup INT
 
 # override like TIME='/usr/bin/time --verbose'
-TIME=${TIME:-time}
+TIME_FORMAT=${TIME_FORMAT:-'%E real %U user %S sys'}
+TIME=${TIME:-"/usr/bin/time"}
 
-echo
 echo "==> running $executable"
-$TIME ./"$executable"
+$TIME -f "$TIME_FORMAT" ./"$executable" || { exit $?; }
 rm "$executable"
