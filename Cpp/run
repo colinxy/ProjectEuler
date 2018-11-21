@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 # run a specific cpp file and time it
 
 if [ -z "$1" ]; then
@@ -54,5 +56,5 @@ TIME_FORMAT=${TIME_FORMAT:-'%E real %U user %S sys'}
 TIME=${TIME:-"/usr/bin/time"}
 
 echo "==> running $executable"
-$TIME -f "$TIME_FORMAT" ./"$executable" || { exit $?; }
+time ./"$executable"
 rm "$executable"

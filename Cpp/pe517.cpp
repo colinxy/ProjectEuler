@@ -12,6 +12,7 @@ using Mathutil::is_prime;
 using Mathutil::pow;
 
 const int MOD = 1000000007;
+vector<int64_t> mod_inverse_cache(10000);
 
 int64_t g(double x, double a) {
     if (x < a)
@@ -26,6 +27,19 @@ int64_t G(int x) {
     return g(x, a);
 }
 
+int64_t nCr_mod(int n, int k) {
+    if (n < k) return 0;
+
+    if (k > n / 2) k = n - k;
+
+    int64_t result = 1;
+    for (int i = 1; i <= k; ++i) {
+        result = (result * n--) % MOD;
+        result = (result * mod_inverse_cache[i]) % MOD;
+    }
+    return result;
+}
+
 // think recursion as following pascal's triangle
 // as you goes down the triangle,
 // going down left ridge -1, going down right ridge -a
@@ -38,81 +52,49 @@ int64_t G(int x) {
       -2-a   -3a
 X   X   X   X
  */
-// only need to compute one row of pascal triangle,
+// only need to find boundary where g(a,x) = 1,
 // then apply binomial coefficient
 int64_t G_fast(int x) {
     // ignore cases where x is perfect square
-
     int64_t result = 0;
 
     double a = sqrt(x);
     int a_floor = floor(a);
 
-    vector<int64_t> row(a_floor+1);
-    int ri = a_floor;
+    for (int i = a_floor; i >= 0; i--) {
+        // x - (i-1)*a - ones < a
+        int ones = floor(x - a * i);
 
-    // x - a*a_floor
-    row[ri--] = 1;
-    vector<int64_t> col;
-    vector<int64_t> col_next;
-    col.reserve(x);
-    col_next.reserve(x);
-    col.push_back(1);
-
-    for (int i = a_floor - 1; i >= 0; i--) {
-        // x - 1*(a_floor-i) - a*i
-        // ends at: x - 1*end_ones - a*i
-        int start_ones = a_floor - i;
-        int end_ones = ceil(x - a * (i+1));
-        int length = end_ones - start_ones + 1;
-
-        col_next.resize(length);
-        for (int j = length-1; j >= (int)col.size()-1; j--) {
-            col_next[j] = length - j;
-        }
-        for (int j = col.size()-1; j >= 1; j--) {
-            col_next[j-1] = (col_next[j] + col[j]) % MOD;
-        }
-
-        // cout << i << " " << col_next[0] << " " << col_next.size() << endl;
-        row[ri--] = col_next[0];
-
-        swap(col, col_next);
-    }
-
-    result = row[0];
-
-    int64_t combin = 1;
-    int n = a_floor;
-    for (int i = 1; i <= a_floor; i++) {
-        // find modular inverse of i
-        // method 1: fermat's little theorem
-        // a^(p-1) = 1 (mod p)
-        // a^(-1) = a^(p-2) (mod p)
-        combin = (combin * n * pow(i, MOD-2, MOD)) % MOD;
-        n--;
-        // TODO: implement extended Euclidean algorithm to find
-        // modular inverse
-
-        result = (result + row[i] * combin % MOD) % MOD;
+        // sums up  C(n, k) % MOD
+        // n = i + ones
+        // k = ones
+        // cout << i << " " << ones << endl;
+        result = (result + nCr_mod(i+ones, ones)) % MOD;
     }
 
     return result;
 }
 
 int main() {
-    cout << G(90) << endl;
-    cout << G_fast(90) << endl;
+    for (int i = 1; i < (int)mod_inverse_cache.size(); i++) {
+        mod_inverse_cache[i] = pow(i, MOD-2, MOD);
+    }
 
-    vector<int> primes;
+    // cout << G(10) << endl;
+    // cout << G_fast(10) << endl;
+    // cout << G(16) << endl;
+    // cout << G_fast(16) << endl;
+    // cout << G(90) << endl;
+    // cout << G_fast(90) << endl;
+
+    int64_t total = 0;
     for (int i = 10000000; i < 10010000; ++i) {
         if (is_prime(i)) {
-            primes.push_back(i);
+            total = (total + G_fast(i)) % MOD;
+            cout << i << endl;
         }
     }
-    cout << primes.size() << endl;
-    cout << primes[primes.size()-1] << endl;
-    cout << G_fast(primes[primes.size()-1]) << endl;
+    cout << total << endl;
 
     return 0;
 }

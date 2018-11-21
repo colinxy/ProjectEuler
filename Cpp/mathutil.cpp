@@ -140,6 +140,21 @@ int64_t Mathutil::nCr(int n, int k) {
 }
 
 
+int64_t Mathutil::nCr(int n, int k, int mod) {
+    if (n < k) return 0;
+
+    if (k > n / 2) k = n - k;
+
+    int64_t result = 1;
+    for (int i = 1; i <= k; ++i) {
+        result = (result * n--) % mod;
+        // TODO: implement extened Euclidean algorithm
+        result = (result * pow(i, mod-2, mod)) % mod;
+    }
+    return result;
+}
+
+
 // overflow safe
 uint64_t Mathutil::nCr_s(unsigned int n, unsigned int k) {
     if (k > n) return 0;

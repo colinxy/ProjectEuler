@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <vector>
+#include <utility>
 
 
 namespace Mathutil {
@@ -19,6 +20,7 @@ namespace Mathutil {
 
       // combinatoric
     int64_t  nCr(int, int);
+    int64_t  nCr(int, int, int);
     uint64_t nCr_s(unsigned int, unsigned int);
 
       // dealing with prime numbers
