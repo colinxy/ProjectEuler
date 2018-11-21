@@ -12,7 +12,11 @@ using Mathutil::is_prime;
 using Mathutil::pow;
 
 const int MOD = 1000000007;
-vector<int64_t> mod_inverse_cache(10000);
+
+const int BEG = 10000000;
+const int END = 10010000;
+vector<int64_t> fact_cache(END+1);
+vector<int64_t> fact_inverse_cache(END+1);
 
 int64_t g(double x, double a) {
     if (x < a)
@@ -29,15 +33,8 @@ int64_t G(int x) {
 
 int64_t nCr_mod(int n, int k) {
     if (n < k) return 0;
-
-    if (k > n / 2) k = n - k;
-
-    int64_t result = 1;
-    for (int i = 1; i <= k; ++i) {
-        result = (result * n--) % MOD;
-        result = (result * mod_inverse_cache[i]) % MOD;
-    }
-    return result;
+    return (fact_inverse_cache[k] * fact_inverse_cache[n-k] % MOD)
+        * fact_cache[n] % MOD;
 }
 
 // think recursion as following pascal's triangle
@@ -76,8 +73,10 @@ int64_t G_fast(int x) {
 }
 
 int main() {
-    for (int i = 1; i < (int)mod_inverse_cache.size(); i++) {
-        mod_inverse_cache[i] = pow(i, MOD-2, MOD);
+    fact_cache[0] = fact_inverse_cache[0] = 1;
+    for (int i = 1; i < END; i++) {
+        fact_cache[i] = fact_cache[i-1] * i % MOD;
+        fact_inverse_cache[i] = pow(fact_cache[i], MOD-2, MOD);
     }
 
     // cout << G(10) << endl;
@@ -88,10 +87,10 @@ int main() {
     // cout << G_fast(90) << endl;
 
     int64_t total = 0;
-    for (int i = 10000000; i < 10010000; ++i) {
+    for (int i = BEG; i < END; ++i) {
         if (is_prime(i)) {
             total = (total + G_fast(i)) % MOD;
-            cout << i << endl;
+            // cout << i << endl;
         }
     }
     cout << total << endl;

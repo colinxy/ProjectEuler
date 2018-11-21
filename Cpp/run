@@ -11,6 +11,7 @@ fi
 
 CXX=${CXX:-g++}
 CXXFLAGS=${CXXFLAGS:-'-std=c++11 -O2 -Wall -Wextra -Werror=return-type'}
+[ -n "$DEBUG" ] && CXXFLAGS="$CXXFLAGS -g"
 
 filename=$(basename "$1")
 executable="${filename%.*}".out  # $executable is never empty
