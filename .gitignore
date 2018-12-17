@@ -5,6 +5,7 @@
 *.o
 *.out
 *.class
+*.hi
 
 __pycache__/
 *.pyc
