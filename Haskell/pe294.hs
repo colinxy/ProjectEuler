@@ -28,6 +28,7 @@ partition_memoized = (map partition [0..] !!)
   where partition 0 = 1
         partition n = sum [partition_memoized (n-i) | i <- [1..9], n-i>=0]
 
+-- TODO: using array cache would be faster here
 partition_length_memoized = (map partition [0..] !!)
   where partition 0 = [(0, 1)]
         partition n =
@@ -35,7 +36,6 @@ partition_length_memoized = (map partition [0..] !!)
                        (length, count) <- partition_length_memoized (n-i)]
           in assoc_reduce recur sum_mod
 
--- TODO: cache this
 partition_maxlen n maxlen =
   let p_lengths = partition_length_memoized n
   in sum_mod [count*((choose maxlen length) `mod` ten9) `mod` ten9

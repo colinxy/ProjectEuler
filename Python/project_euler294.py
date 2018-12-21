@@ -1,4 +1,4 @@
-# translated from my haskell solution, but caches partition_maxlen
+# translated from my haskell solution, but faster (how?)
 # NOTE: needs lru_cache (not available in python2)
 
 from collections import defaultdict
