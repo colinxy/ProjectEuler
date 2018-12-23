@@ -8,6 +8,8 @@ rmdups eq [] = []
 rmdups eq [x] = [x]
 rmdups eq (x:xs) = x : (rmdups eq $ filter (not . (eq x)) xs)
 
+-- complexity O(n^2)
+-- could be improved by using map as the underlying data structure
 assoc_reduce kv_pairs reducer =
   [(key, reducer [value | (k, value) <- kv_pairs, k == key])
   | key <- rmdups (==) (map fst kv_pairs)]
@@ -28,7 +30,7 @@ partition_memoized = (map partition [0..] !!)
   where partition 0 = 1
         partition n = sum [partition_memoized (n-i) | i <- [1..9], n-i>=0]
 
--- TODO: using array cache would be faster here
+-- TODO: using global array cache would be faster here
 partition_length_memoized = (map partition [0..] !!)
   where partition 0 = [(0, 1)]
         partition n =

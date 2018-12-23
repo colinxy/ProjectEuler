@@ -116,7 +116,7 @@ def _try_composite(p, wit, d, r):
 
 
 def miller_rabin(p):
-    """correct up to 341 550 071 728 321
+    """correct up to 341,550,071,728,321
     p is composite if any of the 2 following test fails
     witness ** (2**r * d) % p == 1, or
     witness ** (2**r * d) % p == p-1
@@ -172,15 +172,14 @@ def prime_factorization(n):
     return result
 
 
-def factors(n):
-    p_fact = sorted(prime_factorization(n).items())
-    p_facts = []
-    for fact, exp in p_fact:
-        p_facts.extend([fact] * exp)
+def get_factors(n):
+    p_facts = sorted(prime_factorization(n).items())
+    facts = [1]
 
-    for r in range(1, len(p_facts)):
-        for j in combinations(p_facts, r):
-            yield product(j)
+    for p_fact, exp in p_facts:
+        facts = [f*p_fact**e for e in range(0, exp+1) for f in facts]
+
+    return facts
 
 
 def prime_under(ceiling):
