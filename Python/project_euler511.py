@@ -23,6 +23,16 @@ def seq(n, k):
         return merge(sub_left, sub_right)
 
     def merge(sub_left, sub_right):
+        """convolution
+        https://en.wikipedia.org/wiki/Convolution#Fast_convolution_algorithms
+
+        This implementation here runs in O(N^2)
+
+        This algorithm can be improved to run in O(NlogN) time, but
+        with imprecision using fft. Refer to Yoni's post
+        https://projecteuler.net/thread=511#311921 for details for a
+        brilliant solution.
+        """
         res = defaultdict(int)
         for l_rem, l_count in sub_left.items():
             for r_rem, r_count in sub_right.items():
