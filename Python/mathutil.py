@@ -12,7 +12,7 @@ __author__ = 'yxy'
 #            'product_mod', 'to_base',
 #            'is_prime', 'is_prob_prime',
 #            'prime_under', 'prime_factorization',
-#            'factors', 'prime_factors_under']
+#            'get_factors', 'prime_factors_under']
 
 try:
     range = xrange
@@ -173,6 +173,7 @@ def prime_factorization(n):
 
 
 def get_factors(n):
+    """Not sorted"""
     p_facts = sorted(prime_factorization(n).items())
     facts = [1]
 

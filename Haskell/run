@@ -1,0 +1,15 @@
+#! /bin/bash
+
+set -e
+
+# run a specific Haskell file and time it
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <filename>"
+    exit 1
+fi
+
+filename=$(basename "$1")
+executable="${filename%.*}".out  # $executable is never empty
+
+ghc -O2 "$filename" -o "$executable" && time ./"$executable"
