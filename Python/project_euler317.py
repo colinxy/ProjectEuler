@@ -28,12 +28,14 @@ def solve(h, v, g):
     x0 = sqrt((1 + 2*g*h/v**2) * v**4/g**2)
 
     y_z = y.subs(z, z0)         # y(z) is a function of x
-    # print(y_z)
+    print(y_z)
 
     return integrate(y_z * (2*pi * x), (x, 0, x0)).evalf()
 
 
 def main():
+    h, v, g = symbols('h v g')
+    solve(h, v, g)
     print(solve(h=100, v=20, g=9.81))
 
 
