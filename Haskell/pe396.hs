@@ -1,6 +1,9 @@
 
 ten9 = 10^9
 
+-- taking mod is safe because
+-- 2^(x+10^9) = 2^x mod 10^9 for x >= 9
+-- observation by @neverforget https://projecteuler.net/thread=396#82384
 powMod n k = pow n k 1
   where pow n 0 accum = accum
         pow n k accum
