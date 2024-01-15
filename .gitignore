@@ -5,6 +5,7 @@
 *.o
 *.out
 *.class
+*.tasty
 *.hi
 
 __pycache__/
