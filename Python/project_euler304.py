@@ -1,10 +1,14 @@
-from mathutil import miller_rabin
+from math import sqrt, log2, ceil
+from mathutil import prime_under, miller_rabin
 
 START = 10**14
 MOD = 1234567891011
 
 
-def next_primes(start, count):
+def next_primes_mr(start, count):
+    """
+    Test each prime using miller_rabin
+    """
     primes = []
     for i in range(start+1, 2*start):
         if miller_rabin(i):
@@ -15,12 +19,25 @@ def next_primes(start, count):
     return primes
 
 
-def fib(n):
-    a, b = 0, 1
-    for _ in range(n):
-        a, b = b, a+b
+def next_primes_sieve(offset, count):
+    """
+    Sieve with offset
+    """
+    primes = prime_under(int(sqrt(offset) * 1.01))
 
-    return a
+    is_prime_offset = [True] * int(count * log2(offset) * 2)
+    for p in primes:
+        for j in range(int(ceil(offset/p)*p), offset+len(is_prime_offset), p):
+            is_prime_offset[j-offset] = False
+
+    primes_offset = []
+    for (i, is_prime) in enumerate(is_prime_offset):
+        if is_prime:
+            primes_offset.append(i+offset)
+            if len(primes_offset) >= count:
+                break
+
+    return primes_offset
 
 
 def mat_mul(a, b):
@@ -90,7 +107,7 @@ def fib_incr(nums):
 
 
 def main():
-    primes = next_primes(START, 10**5)
+    primes = next_primes_sieve(START, 10**5)
     print('smallest', primes[0], 'largest', primes[-1])
 
     print(sum(fib_incr(primes)) % MOD)
