@@ -1,4 +1,5 @@
-import scala.collection.mutable.BitSet
+import scala.collection.mutable.BitSet;
+import scala.math.{sqrt,floor};
 
 object MathUtil {
   def primeUnder(n: Int): IndexedSeq[Int] = {
@@ -6,7 +7,8 @@ object MathUtil {
 
     isPrime += 2
     for (i <- 3 until n by 2) isPrime += i
-    for (p <- 3 until n by 2) {
+    val sqrtN = floor(sqrt(n.toDouble)).toInt
+    for (p <- 3 until sqrtN by 2) {
       if (isPrime(p)) {
 
         val pLong = p.toLong
