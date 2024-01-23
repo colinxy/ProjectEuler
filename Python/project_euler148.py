@@ -1,5 +1,13 @@
-from math import log, floor, ceil
-from mathutil import product
+# Reference:
+# https://en.wikipedia.org/wiki/Lucas%27s_theorem
+#
+# binomial coefficient nCr(m, n) is divisible by p iff
+# at least one of the base p digits of n is greater than the corresponding digit of m
+#
+# alternatively, binomial coefficient nCr(m, n) is not divisible by p iff
+# all base p digits of n is less than or equal to corresponding digit of m
+
+from math import prod
 
 
 def div7(num):
@@ -13,7 +21,7 @@ def div7(num):
 # brute force
 def div7_row(m):
     """number of numbers that is divisible by 7 in row m.
-    m is (the actual row in Pascal Triangle - 1)
+    row index starts from 0.
     """
     combination = m
     pow7 = 0
@@ -37,57 +45,86 @@ def div7_row(m):
 
     return count
 
-SIZE = 10 ** 9
-# 10 ** 9
-# 3     3     5    3    1    6    0    0    6    1    6
-# 7**11 7**10 7**9 7**8 7**7 7**6 7**5 7**4 7**3 7**2 7
+
+def not_div7_row(row_base7):
+    # row_base7 is the row index written in base 7
+    # find the number of entries not divisible by 7 in row
+    return prod(i + 1 for i in row_base7)
+
+
+def base7_add1(base7):
+    """
+    base7 is reversed: the least significant digit goes first
+    """
+    base7[0] += 1
+    for d in range(len(base7)):
+        if base7[d] < 7:
+            break
+
+        # base7[d] == 7
+        # carry-over
+        base7[d] = 0
+        if d < len(base7) - 1:
+            base7[d + 1] += 1
+        else:
+            base7.append(1)
+
+    return base7
+
+
+def not_div7_tri(n):
+    count = 0
+    # row number in base 7
+    row_base7 = [0]
+    for row in range(n):
+        curr_count = not_div7_row(row_base7)
+        count += curr_count
+
+        row_base7 = base7_add1(row_base7)
+
+    return count
 
 
 def main():
-    # brute firce
-    # count = 0
-    # for i in range(1, SIZE):
-    #     count += div7_row(i)
-    # print(count)
-    # print(SIZE * (SIZE + 1) // 2 - count)
+    print(not_div7_tri(100))
 
-    # POW = ceil(log(SIZE, 7))
-    # pow7 = [7**i for i in range(1, POW)]
-    # triangle = [(i - 1) * i // 2 for i in pow7]
-    # whole_triangle = [triangle[0]]
-    # for i in range(1, POW - 1):
-    #     whole_triangle.append(whole_triangle[-1] * 21 * 3 + triangle[i])
+    def tri(n):
+        return (n+1)*n//2
 
-    # print(pow7)
-    # print(triangle)
-    # print(whole_triangle)
+    # find all m, n such that all base 7 digits of m is less than n
+    N = 10 ** 9
+    # 10**9-1 in base7: 33531600615
 
-    # # top level
-    # covered = (7 ** (POW - 1) * 2)
-    # total = whole_triangle[-1] * (SIZE // covered)
+    total = 0
+    # 1st digit 0-2
+    total += tri(3) * tri(7)**10
+    # 1st digit 3
+    # 2nd digit 0-2
+    total += 4 * tri(3) * tri(7)**9
+    # 1st digit 3, 2nd digit 3
+    # 3rd digit 0-4
+    total += 4 * 4 * tri(5) * tri(7)**8
+    # 1st digit 3, 2nd digit 3, 3rd digit 5
+    # 4th digit 0-2
+    total += 4 * 4 * 6 * tri(3) * tri(7)**7
+    # 1st digit 3, 2nd digit 3, 3rd digit 5, 4th digit 3
+    # 5th digit 0
+    total += 4 * 4 * 6 * 4 * tri(1) * tri(7)**6
+    # 1st digit 3, 2nd digit 3, 3rd digit 5, 4th digit 3, 5th digit 1
+    # 6th digit 0-5
+    total += 4 * 4 * 6 * 4 * 2 * tri(6) * tri(7)**5
+    # 1st digit 3, 2nd digit 3, 3rd digit 5, 4th digit 3, 5th digit 1, 6th digit 6, 7th digit 0, 8th digit 0
+    # 9th digit 0-5
+    total += 4 * 4 * 6 * 4 * 2 * 7 * tri(6) * tri(7)**2
+    # 1st digit 3, 2nd digit 3, 3rd digit 5, 4th digit 3, 5th digit 1, 6th digit 6, 7th digit 0, 8th digit 0, 9th digit 6
+    # 10th digit 0
+    total += 4 * 4 * 6 * 4 * 2 * 7 * 7 * tri(1) * tri(7)**1
+    # 1st digit 3, 2nd digit 3, 3rd digit 5, 4th digit 3, 5th digit 1, 6th digit 6, 7th digit 0, 8th digit 0, 9th digit 6, 10th digit 1
+    # 11th digit 0-5
+    total += 4 * 4 * 6 * 4 * 2 * 7 * 7 * 2 * tri(6)
 
-    # print(total)
-    # print(SIZE - covered)
-
-    # by Lucus's Thm
-    count = 0
-    row_base7 = [0]
-    for row in range(0, SIZE):
-        count += product(i + 1 for i in row_base7)
-
-        row_base7[0] += 1
-        for d in range(len(row_base7)):
-            if row_base7[d] == 7:
-                row_base7[d] = 0
-                if d < len(row_base7) - 1:
-                    row_base7[d + 1] += 1
-                else:
-                    row_base7.append(1)
-                    break
-            else:
-                break
-
-    print(count)
+    print(total)
+    # can be solved in the general case rather than manually
 
 
 if __name__ == '__main__':

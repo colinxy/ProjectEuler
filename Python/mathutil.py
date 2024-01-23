@@ -3,25 +3,17 @@ from __future__ import division
 
 import random
 from functools import reduce
-from itertools import combinations
 import operator
+
+from math import gcd
+from math import prod as product
+from math import comb as nCr
+from math import perm as nPr
 
 __author__ = 'yxy'
 
-# __all__ = ['gcd', 'nCr', 'nPr', 'product',
-#            'product_mod', 'to_base',
-#            'is_prime', 'is_prob_prime',
-#            'prime_under', 'prime_factorization',
-#            'get_factors', 'prime_factors_under']
 
-try:
-    range = xrange
-except NameError:
-    pass
-
-
-def product(iterable, start=1):
-    return reduce(operator.mul, iterable, start)
+# deprecate product in favor of math.prod
 
 
 def product_mod(iterable, mod, start=1):
@@ -47,10 +39,7 @@ def fib_lazy():
         yield f
 
 
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
+# deprecate gcd in favor of math.gcd
 
 
 def extended_gcd(n, p):
@@ -64,23 +53,10 @@ def extended_gcd(n, p):
     return a_                    # tuple
 
 
-def nCr(m, n):
-    """Choose n out of m"""
-    if n > m / 2:
-        n = m - n
-    result = 1
-    for i in range(1, n + 1):
-        result *= m - i + 1
-        result //= i
-    return result
+# deprecate nCr in favor of math.comb
 
 
-def nPr(m, n):
-    """Arrange n out of m"""
-    result = 1
-    for i in range(m, m - n, -1):
-        result *= i
-    return result
+# deprecate nPr in favor of math.perm
 
 
 def to_base(n, base, alphabet="0123456789abcdefghijklmnopqrstuvwxyz"):
