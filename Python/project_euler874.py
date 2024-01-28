@@ -37,7 +37,7 @@ print()
 
 # 6999 * n % 7000 = 6337
 idx_slots = (k-1) * n % k
-# by trial and error, pick:
+# try the highest few utilities, best pick:
 #   p(k-1-4): 1582 times => 1582 * 4 = 6328
 #   p(k-1-9): 1 time     => 1    * 9 = 9
 # total                              = 6337
