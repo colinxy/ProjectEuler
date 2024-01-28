@@ -1,5 +1,6 @@
 # Reference:
 # https://en.wikipedia.org/wiki/Lucas%27s_theorem
+# https://larryriddle.agnesscott.org/ifs/siertri/LucasProof.htm
 #
 # binomial coefficient nCr(m, n) is divisible by p iff
 # at least one of the base p digits of n is greater than the corresponding digit of m

@@ -1,24 +1,22 @@
-# consider only letter A and B in a word: they are formed by
+# Consider only letter A and B in a word: they are formed by
 # interleaving runs of As and Bs. For example,
 #
 #   AA BB A BBB
 #
-# Between runs of As and Bs, there must be at least 2 Cs.
 # Let there be k_A runs of A, and k_B runs of B, then k_A and k_B
-# differ by no more than 1. And there must be at least 2(k_A+k_B-1) Cs
-# between runs of runs of As and Bs.
-#
-# Remove 2 Cs between every run of As and Bs, and
-# the remaining Cs can be placed anywhere in between As and Bs.
-# This is equivalent to the combinatorial problem:
+# differ by no more than 1. The above example has k_A = 2 runs of A
+# and k_B = 2 runs of B. We can count the number of ways to split As
+# and Bs into runs using
 # https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
+# where no empty bins are allowed.
 #
-# Another problem is to count ways to split As and Bs into runs.
-# Only consider As into k_A runs: this is solvable by the same
-# combinatorial problem, except with non-empty bins.
-# Similarly for Bs.
+# Since there must be at least 2 Cs between runs of As and Bs, there
+# must be at least 2(k_A+k_B-1) Cs between runs of runs of As and
+# Bs. Ignore 2 Cs between every run of As and Bs, and the remaining Cs
+# can be placed anywhere in between As and Bs. This is solvable by the
+# same combinatorial problem except that empty bins are allowed.
 #
-# Also consider problem 862
+# Also consider problem 862, which also uses stars and bars.
 
 from math import comb
 
