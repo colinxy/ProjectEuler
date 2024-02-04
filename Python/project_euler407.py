@@ -14,7 +14,9 @@
 #
 # Suppose n has multiple prime factors. We can find n = pq, where p, q
 # co-prime, such that p | a and q | a-1 (a and a-1 are co-prime)
-#
+# Then we can find a using Chinese remainder theorem.
+# Let r =  p^-1 (mod q), then a = p * r
+# Similarly we can swap p and q.
 
 from math import prod
 from itertools import combinations
@@ -27,12 +29,6 @@ def M(n):
             return a
 
 
-def mod_inverse(n, mod):
-    inv, _ = extended_gcd(n, mod)
-    # inv might be negative, so take another modular to ensure it's positive
-    return inv % mod
-
-
 def M_powers(n, prime_powers):
     # n = p1^r1 * p2^r2 * ... * pk^rk
     # prime_powers = [p1^r1, p2^r2, ..., pk^rk]
@@ -42,15 +38,13 @@ def M_powers(n, prime_powers):
     m_max = 1
     for i in range(1, len(prime_powers)//2+1):
         for c in combinations(prime_powers, i):
-            p1 = prod(c)
-            p2 = n // p1
-            pqs = [(p1, p2)]
-            if i*2 != len(prime_powers):
-                pqs.append((p2, p1))
+            p = prod(c)
+            q = n // p
+            p_inv, q_inv = extended_gcd(p, q)
+            p_inv %= q
+            q_inv %= p
 
-            for p, q in pqs:
-                m = p * mod_inverse(p, q)
-                m_max = max(m_max, m)
+            m_max = max(m_max, p*p_inv, q*q_inv)
 
     return m_max
 
