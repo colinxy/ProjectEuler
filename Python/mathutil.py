@@ -174,20 +174,6 @@ def prime_under(ceiling):
     return primes
 
 
-def is_prime_array(ceiling):
-    import numpy as np
-
-    is_prime_arr = np.ones(ceiling, dtype=np.bool)
-    is_prime_arr[0], is_prime_arr[1] = False, False
-    for i in range(4, ceiling, 2):
-        is_prime_arr[i] = False
-    for i in range(3, ceiling, 2):
-        if is_prime_arr[i]:
-            for j in range(i * i, ceiling, i * 2):
-                is_prime_arr[j] = False
-    return is_prime_arr
-
-
 def prime_factors_under(ceiling):
     factor = [[] for _ in range(ceiling)]
     for i in range(2, ceiling):

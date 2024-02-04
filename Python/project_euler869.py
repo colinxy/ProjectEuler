@@ -17,9 +17,6 @@
 #                   = P(X_i=1|prefix) + E[X_{i+1}+...|prefix followed by 0] * P(followed by 0|prefix) + E[X_{i+1}+...|prefix followed by 1] * P(followed by 1|prefix)
 # We can then recurse on E[X_{i+1}+...|prefix followed by 0 or 1]
 
-
-from math import log2, ceil
-
 from mathutil import prime_under
 
 
